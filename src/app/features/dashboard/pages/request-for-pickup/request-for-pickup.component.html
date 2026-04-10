@@ -1,0 +1,100 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Request for Pickup</h1>
+      <p class="page-sub">Incoming pickup requests from HomeFirst — confirm to schedule</p>
+    </div>
+    <button class="export-btn">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Export
+    </button>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat-card">
+      <div class="stat-label">NEW REQUESTS</div>
+      <div class="stat-value">{{ pending().length }}</div>
+      <div class="stat-delta delta-orange">awaiting confirmation</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">SCHEDULED TODAY</div>
+      <div class="stat-value">{{ scheduled().length }}</div>
+      <div class="stat-delta delta-green">confirmed by Kleeto</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">TOTAL FILES</div>
+      <div class="stat-value">{{ totalFiles() }}</div>
+      <div class="stat-delta">pending requests</div>
+    </div>
+  </div>
+
+  <!-- Data Table -->
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Incoming Pickup Requests</div>
+        <div class="card-sub">Requests from HomeFirst branches awaiting Kleeto confirmation</div>
+      </div>
+      <span class="badge-pill" *ngIf="pending().length > 0">{{ pending().length }} pending</span>
+    </div>
+    <div class="table-wrap">
+      <table *ngIf="pending().length > 0">
+        <thead>
+          <tr>
+            <th>Branch</th><th>Branch Address</th><th>CSM / BM</th><th>Mobile</th>
+            <th>No. of Files</th><th>No. of Boxes</th><th>Pickup Date</th><th>Remarks</th><th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let r of pending()">
+            <td class="cell-branch">{{ r.branch }}</td>
+            <td class="cell-addr">{{ r.addr }}</td>
+            <td>{{ r.csm }}</td>
+            <td class="mono">{{ r.mob }}</td>
+            <td class="mono">{{ r.files }}</td>
+            <td class="mono">{{ r.boxes }}</td>
+            <td class="mono">{{ r.date }}</td>
+            <td class="cell-remarks">{{ r.remarks }}</td>
+            <td><button class="btn-confirm" (click)="openConfirmModal(r)">✓ Confirm Pickup</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="no-data" *ngIf="pending().length === 0">No pending requests.</div>
+    </div>
+  </div>
+
+  <!-- Confirm Pickup Modal -->
+  <div class="modal-overlay" *ngIf="showModal()" (click)="closeModal()">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <span class="modal-title">Confirm Pickup</span>
+        <button class="close-btn" (click)="closeModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-summary">
+          <div class="modal-summary-label">Pickup Request</div>
+          <div class="modal-summary-branch">{{ selectedRequest()?.branch }}</div>
+          <div class="modal-summary-detail">
+            {{ selectedRequest()?.csm }} · {{ selectedRequest()?.files }} files · {{ selectedRequest()?.boxes }} box · Requested: {{ selectedRequest()?.date }}
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Expected Pickup Date</label>
+            <input class="form-control" type="date" [ngModel]="confirmDate()" (ngModelChange)="confirmDate.set($event)" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">POD / Consignment No.</label>
+            <input class="form-control" type="text" [ngModel]="confirmPOD()" (ngModelChange)="confirmPOD.set($event)" placeholder="e.g. 421012960" />
+          </div>
+        </div>
+        <div class="form-error" *ngIf="formError()">Please fill in both fields before confirming.</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" (click)="closeModal()">Cancel</button>
+        <button class="btn-confirm" (click)="submitConfirm()">✓ Confirm Pickup</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,165 @@
+<div class="login-wrapper">
+  <div class="login-card">
+    <!-- LEFT PANEL: Brand & Illustration -->
+    <div class="left-panel">
+      <!-- Geometric Background Patterns -->
+      <div class="geo-circle-top"></div>
+      <div class="geo-circle-bottom"></div>
+      <div class="geo-triangle-1"></div>
+      <div class="geo-triangle-2"></div>
+      <div class="geo-lines"></div>
+
+      <div class="brand-chips">
+        <div class="chip">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+          <span>Home First</span>
+        </div>
+        <div class="chip-sep">×</div>
+        <div class="chip teal-text">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+          </svg>
+          <span>Kleeto</span>
+        </div>
+      </div>
+
+      <div class="vault-illustration">
+        <svg viewBox="0 0 200 200">
+          <!-- Vault Body -->
+          <rect x="40" y="40" width="120" height="120" rx="10" fill="#0C447C" stroke="#185FA5" stroke-width="2"/>
+          <!-- Door Frame -->
+          <rect x="55" y="55" width="90" height="90" rx="6" fill="#185FA5" opacity="0.3"/>
+          <rect x="60" y="60" width="80" height="80" rx="4" fill="none" stroke="#B5D4F4" stroke-width="1.5" opacity="0.5"/>
+          
+          <!-- Inner Dial Face -->
+          <circle cx="100" cy="100" r="35" fill="#0C447C" stroke="#B5D4F4" stroke-width="3"/>
+          
+          <!-- Tick Marks -->
+          <g stroke="#B5D4F4" stroke-width="1.5" opacity="0.6">
+            <line x1="100" y1="68" x2="100" y2="72"/>
+            <line x1="100" y1="128" x2="100" y2="132"/>
+            <line x1="68" y1="100" x2="72" y2="100"/>
+            <line x1="128" y1="100" x2="132" y2="100"/>
+            <line x1="77" y1="77" x2="80" y2="80"/>
+            <line x1="120" y1="120" x2="123" y2="123"/>
+            <line x1="77" y1="123" x2="80" y2="120"/>
+            <line x1="120" y1="80" x2="123" y2="77"/>
+          </g>
+
+          <!-- Central Dial Knob -->
+          <circle cx="100" cy="100" r="12" fill="#B5D4F4"/>
+          <circle cx="100" cy="100" r="4" fill="#185FA5"/>
+
+          <!-- Side Bolts -->
+          <rect x="30" y="70" width="15" height="10" rx="2" fill="#B5D4F4" opacity="0.4"/>
+          <rect x="30" y="120" width="15" height="10" rx="2" fill="#B5D4F4" opacity="0.4"/>
+          <rect x="155" y="70" width="15" height="10" rx="2" fill="#B5D4F4" opacity="0.4"/>
+          <rect x="155" y="120" width="15" height="10" rx="2" fill="#B5D4F4" opacity="0.4"/>
+        </svg>
+      </div>
+
+      <div class="left-footer-text">
+        <h2>Your documents,<br>vaulted & verified</h2>
+        <p class="sub-heading">Enterprise-grade digital custody for your private data.</p>
+        <hr class="navy-rule">
+        <div class="compliance-badge">
+          <span class="dot teal-dot"></span>
+          <span>Kleeto-powered data vault · RBI compliant</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL: Login Form -->
+    <div class="right-panel">
+      <div class="form-header">
+        <div class="status-badge">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          VaultLink · Secure portal
+        </div>
+        <h1>Welcome back</h1>
+        <p>Sign in to access your data vault.</p>
+      </div>
+
+      <div class="err-box" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="input-container">
+          <label>EMAIL / USERNAME</label>
+          <div class="input-rel">
+            <span class="icon-inset">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
+            </span>
+            <input type="text" formControlName="username" placeholder="name@example.com">
+          </div>
+        </div>
+
+        <div class="input-container">
+          <label>PASSWORD</label>
+          <div class="input-rel">
+            <span class="icon-inset">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </span>
+            <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="••••••••">
+            <button type="button" class="eye-toggle" (click)="togglePassword()">
+              <svg *ngIf="!showPassword" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+              </svg>
+              <svg *ngIf="showPassword" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="forgot-row">
+          <label class="check-wrap">
+            <input type="checkbox">
+            <span class="check-label">Keep me signed in</span>
+          </label>
+          <a class="link-blue">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="primary-cta" [disabled]="loginForm.invalid">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          Sign in to VaultLink
+        </button>
+      </form>
+
+      <div class="divider">
+        <span>or</span>
+      </div>
+
+      <button type="button" class="sso-btn">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+        </svg>
+        Continue with SSO
+      </button>
+
+      <div class="right-footer">
+        <div class="footer-links">
+          <a>Help</a>
+          <a>Privacy</a>
+        </div>
+        <div class="trust-chip">
+          <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="3">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          Kleeto vaulted
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
