@@ -1,0 +1,115 @@
+.toast-container {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none;
+  width: auto;
+  max-width: 90vw;
+}
+
+.toast-card {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 20px;
+  border-radius: 16px;
+  min-width: 320px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+
+  &:hover {
+    transform: scale(1.02);
+  }
+
+  &.success {
+    background: rgba(236, 253, 245, 0.85); // Emerald-50
+    color: #065f46; // Emerald-800
+    border-color: rgba(16, 185, 129, 0.2);
+    
+    .toast-icon {
+      background: #10b981; // Emerald-500
+      color: white;
+    }
+  }
+
+  &.error {
+    background: rgba(254, 242, 242, 0.85); // Red-50
+    color: #991b1b; // Red-800
+    border-color: rgba(239, 68, 68, 0.2);
+
+    .toast-icon {
+      background: #ef4444; // Red-500
+      color: white;
+    }
+  }
+
+  &.info {
+    background: rgba(240, 249, 255, 0.85); // Blue-50
+    color: #075985; // Blue-800
+    border-color: rgba(14, 165, 233, 0.2);
+
+    .toast-icon {
+      background: #0ea5e9; // Blue-500
+      color: white;
+    }
+  }
+}
+
+.toast-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  flex-shrink: 0;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.toast-msg {
+  font-size: 14px;
+  font-weight: 500;
+  flex-grow: 1;
+  line-height: 1.4;
+}
+
+.toast-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  line-height: 1;
+  color: currentColor;
+  opacity: 0.5;
+  cursor: pointer;
+  padding: 4px;
+  
+  &:hover {
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

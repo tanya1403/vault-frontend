@@ -56,6 +56,8 @@ export class PickupScheduledPageComponent implements OnInit {
           actualPickupDate: r.actualPickupDate || '—'
         }));
         this.data.kleetoRequests.set(mapped);
+        // Update global count for scheduled items
+        this.data.updateCounts({ scheduled: mapped.length });
         this.loading.set(false);
       },
       error: (err) => {

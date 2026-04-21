@@ -47,6 +47,8 @@ export class DeliveredPageComponent implements OnInit {
           actualPickupDate: r.actualPickupDate || '—'
         }));
         this.data.kleetoRequests.set(mapped);
+        // Sync global count
+        this.data.updateCounts({ delivered: mapped.length });
         this.loading.set(false);
       },
       error: (err) => {
