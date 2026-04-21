@@ -6,16 +6,26 @@ export class DataService {
   kleetoRequests = signal<PickupRequestKleeto[]>([]);
   sfRequests = signal<PickupRequest[]>([]);
 
-  // Computed counts for UI
-  countPending = computed(() => this.kleetoRequests().filter(r => r.state === 'pending').length);
-  countScheduled = computed(() => this.kleetoRequests().filter(r => r.state === 'scheduled').length);
-  countIntransit = computed(() => this.kleetoRequests().filter(r => r.state === 'intransit').length);
-  countDelivered = computed(() => this.kleetoRequests().filter(r => r.state === 'delivered').length);
+  // Global counts for Dashboard Top Bar (Synced across pages)
+  dashboardStats = signal({
+    pending: 0,
+    scheduled: 0,
+    intransit: 0,
+    delivered: 0,
+    totalFiles: 0
+  });
+
+  // Backward compatibility / convenience
+  countPending = computed(() => this.dashboardStats().pending);
+  countScheduled = computed(() => this.dashboardStats().scheduled);
+  countIntransit = computed(() => this.dashboardStats().intransit);
+  countDelivered = computed(() => this.dashboardStats().delivered);
   
-  totalFilesPending = computed(() => this.kleetoRequests()
-    .filter(r => r.state === 'pending')
-    .reduce((sum, r) => sum + (r.files || 0), 0)
-  );
+  totalFilesPending = computed(() => this.dashboardStats().totalFiles);
+
+  updateCounts(stats: Partial<typeof this.dashboardStats.prototype>) {
+    this.dashboardStats.update(current => ({ ...current, ...stats }));
+  }
 
   BRANCH_ADDR: Record<string, string> = { 'BranchA': 'AddressA' };
 

@@ -54,6 +54,8 @@ export class IntransitPageComponent implements OnInit {
           actualPickupDate: r.actualPickupDate || '—'
         }));
         this.data.kleetoRequests.set(mapped);
+        // Update global count
+        this.data.updateCounts({ intransit: mapped.length });
         this.loading.set(false);
       },
       error: (err) => {

@@ -1,111 +1,138 @@
 <div class="page-container" *ngIf="!loading(); else loader">
-  
-  <!-- Stat Cards Row -->
-  <div class="stat-row">
-    <div class="stat-card-val">
-      <div class="d-flex align-items-start">
-        <div class="stat-icon-tile" style="background: var(--purple-bg); color: var(--purple-brand);">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-          </svg>
+
+  <div class="page-fixed-top">
+    <!-- Stat Cards Row -->
+    <div class="stat-row">
+      <div class="stat-card-val" [routerLink]="['/dashboard', 'intransit']">
+        <div class="d-flex align-items-start">
+          <div class="stat-icon-tile" style="background: var(--purple-bg); color: var(--purple-brand);">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <path
+                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+            </svg>
+          </div>
+          <div class="stat-trend-pill" style="background: var(--purple-bg); color: var(--purple-text);">Moving</div>
         </div>
-        <div class="stat-trend-pill" style="background: var(--purple-bg); color: var(--purple-text);">Moving</div>
+        <div class="stat-micro-label"
+          style="font-size: 11px; font-weight: 500; color: var(--purple-brand); letter-spacing: 0.05em; margin-bottom: 8px;">
+          IN TRANSIT</div>
+        <div class="stat-main-number" style="font-size: 32px; font-weight: 600; margin-bottom: 8px;">{{
+          data.countIntransit() }}</div>
+        <div class="progress-track">
+          <div class="progress-fill" [style.width.%]="data.countIntransit() > 0 ? 100 : 0"
+            style="background: var(--purple-brand);"></div>
+        </div>
       </div>
-      <div class="stat-micro-label" style="font-size: 11px; font-weight: 500; color: var(--purple-brand); letter-spacing: 0.05em; margin-bottom: 8px;">IN TRANSIT</div>
-      <div class="stat-main-number" style="font-size: 32px; font-weight: 600; margin-bottom: 8px;">{{ data.countIntransit() }}</div>
-      <div class="progress-track">
-        <div class="progress-fill" [style.width.%]="data.countIntransit() > 0 ? 100 : 0" style="background: var(--purple-brand);"></div>
+
+      <div class="stat-card-val" [routerLink]="['/dashboard', 'delivered']">
+        <div class="d-flex align-items-start">
+          <div class="stat-icon-tile" style="background: var(--teal-bg); color: var(--teal-brand);">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+              <polyline points="22 4 12 14.01 9 11.01" />
+            </svg>
+          </div>
+          <div class="stat-trend-pill" style="background: var(--teal-bg); color: var(--teal-text);">Confirmed</div>
+        </div>
+        <div class="stat-micro-label"
+          style="font-size: 11px; font-weight: 500; color: var(--teal-brand); letter-spacing: 0.05em; margin-bottom: 8px;">
+          DELIVERED TODAY</div>
+        <div class="stat-main-number" style="font-size: 32px; font-weight: 600; margin-bottom: 8px;">{{
+          data.countDelivered() }}</div>
+        <div class="progress-track">
+          <div class="progress-fill" style="width: 100%; background: var(--teal-brand);"></div>
+        </div>
+      </div>
+
+      <div class="stat-card-val" [routerLink]="['/dashboard', 'delivered']">
+        <div class="d-flex align-items-start">
+          <div class="stat-icon-tile" style="background: var(--blue-light); color: var(--blue-brand);">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+            </svg>
+          </div>
+          <div class="stat-trend-pill" style="background: var(--blue-light); color: var(--blue-brand);">Archive</div>
+        </div>
+        <div class="stat-micro-label"
+          style="font-size: 11px; font-weight: 500; color: var(--blue-brand); letter-spacing: 0.05em; margin-bottom: 8px;">
+          TOTAL ACKNOWLEDGED</div>
+        <div class="stat-main-number" style="font-size: 32px; font-weight: 600; margin-bottom: 8px;">{{
+          data.countDelivered() }}</div>
+        <div class="progress-track">
+          <div class="progress-fill" style="width: 100%; background: var(--blue-brand);"></div>
+        </div>
       </div>
     </div>
 
-    <div class="stat-card-val">
-      <div class="d-flex align-items-start">
-        <div class="stat-icon-tile" style="background: var(--teal-bg); color: var(--teal-brand);">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" />
-          </svg>
-        </div>
-        <div class="stat-trend-pill" style="background: var(--teal-bg); color: var(--teal-text);">Confirmed</div>
-      </div>
-      <div class="stat-micro-label" style="font-size: 11px; font-weight: 500; color: var(--teal-brand); letter-spacing: 0.05em; margin-bottom: 8px;">DELIVERED TODAY</div>
-      <div class="stat-main-number" style="font-size: 32px; font-weight: 600; margin-bottom: 8px;">{{ data.countDelivered() }}</div>
-      <div class="progress-track">
-        <div class="progress-fill" style="width: 100%; background: var(--teal-brand);"></div>
-      </div>
+    <div class="header-stack mb-4" style="margin-top: var(--sp-6);">
+      <h2 style="font-size: 24px; font-weight: 600; margin: 0 0 12px; color: var(--navy);">Delivered Shipments</h2>
+      <p style="font-size: 14px; color: var(--gray-tertiary); margin: 0 0 0;">Shipments successfully received and
+        acknowledged at the vault</p>
     </div>
 
-    <div class="stat-card-val">
-      <div class="d-flex align-items-start">
-        <div class="stat-icon-tile" style="background: var(--blue-light); color: var(--blue-brand);">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" />
-          </svg>
-        </div>
-        <div class="stat-trend-pill" style="background: var(--blue-light); color: var(--blue-brand);">Archive</div>
-      </div>
-      <div class="stat-micro-label" style="font-size: 11px; font-weight: 500; color: var(--blue-brand); letter-spacing: 0.05em; margin-bottom: 8px;">TOTAL ACKNOWLEDGED</div>
-      <div class="stat-main-number" style="font-size: 32px; font-weight: 600; margin-bottom: 8px;">{{ data.countDelivered() }}</div>
-      <div class="progress-track">
-        <div class="progress-fill" style="width: 100%; background: var(--blue-brand);"></div>
-      </div>
+    <!-- Re-introduced Status Banner (Teal for Delivered) -->
+    <div class="banner-premium"
+      style="background: var(--teal-bg); color: var(--teal-text); border-color: var(--teal-brand);">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+        <polyline points="22 4 12 14.01 9 11.01" />
+      </svg>
+      <span>Great job! <strong>{{ data.countDelivered() }}</strong> total shipments have been successfully delivered and
+        vaulted.</span>
     </div>
   </div>
 
-
-
-  <div class="header-stack mb-4" style="margin-top: var(--sp-4);">
-    <h2 style="font-size: 24px; font-weight: 600; margin: 0 0 12px; color: var(--navy);">Delivered Shipments</h2>
-    <p style="font-size: 14px; color: var(--gray-tertiary); margin: 0 0 0;">Shipments successfully received and acknowledged at the vault</p>
-  </div>
-
-  <!-- Re-introduced Status Banner (Teal for Delivered) -->
-  <div class="banner-premium" style="background: var(--teal-bg); color: var(--teal-text); border-color: var(--teal-brand);">
-    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5">
-      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" />
-    </svg>
-    <span>Great job! <strong>{{ data.countDelivered() }}</strong> total shipments have been successfully delivered and vaulted.</span>
-  </div>
-
-  <div class="table-container-premium">
-    <table class="table-premium">
-      <thead>
-        <tr>
-          <th style="width: 15%;">Branch</th>
-          <th style="width: 25%;">Address</th>
-          <th style="width: 20%;">CSM / BM</th>
-          <th class="text-end" style="width: 10%;">Files</th>
-          <th class="text-end" style="width: 10%;">Boxes</th>
-          <th style="width: 15%;">Actual Pickup Date</th>
-          <th style="width: 15%;">Delivery Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let r of data.kleetoRequests()">
-          <td>
-            <div class="chip-branch">
-              <svg viewBox="0 0 24 24" width="10" height="10" fill="var(--navy)">
-                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
-              </svg>
-              {{ r.branch }}
-            </div>
-          </td>
-          <td><div style="font-size: 11px; color: var(--gray-tertiary); line-height: 1.4;">{{ r.addr }}</div></td>
-          <td>
-            <div class="d-flex align-items-center gap-2">
-              <div class="avatar-circle" style="background: var(--teal-bg); color: var(--teal-text);">
-                {{ r.ownerName?.[0] || 'D' }}{{ r.ownerName?.[1] || 'L' }}
+  <div class="page-scrollable-content">
+    <div class="table-container-premium">
+      <table class="table-premium">
+        <thead>
+          <tr>
+            <th style="width: 15%;">Branch</th>
+            <th style="width: 25%;">Address</th>
+            <th style="width: 20%;">CSM / BM</th>
+            <th class="text-end" style="width: 10%;">Files</th>
+            <th class="text-end" style="width: 10%;">Boxes</th>
+            <th style="width: 15%;">Actual Pickup Date</th>
+            <th style="width: 15%;">Delivery Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let r of data.kleetoRequests()">
+            <td>
+              <div class="chip-branch">
+                <svg viewBox="0 0 24 24" width="10" height="10" fill="var(--navy)">
+                  <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                </svg>
+                {{ r.branch }}
               </div>
-              <span style="font-size: 11px;">{{ r.ownerName }}</span>
-            </div>
-          </td>
-          <td class="text-end"><div class="count-chip">{{ r.files }}</div></td>
-          <td class="text-end"><div class="count-chip">{{ r.boxes }}</div></td>
-          <td class="mono" style="font-size: 11px; color: var(--navy); font-weight: 500;">{{ r.actualPickupDate || '—' }}</td>
-          <td class="mono" style="font-size: 11px;">{{ r.date || '—' }}</td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="no-data" *ngIf="data.countDelivered() === 0">No delivered shipments found.</div>
+            </td>
+            <td>
+              <div style="font-size: 14px; line-height: 1.4;">{{ r.addr }}</div>
+            </td>
+
+
+            <td>
+              <span>{{ r.ownerName }}</span>
+            </td>
+
+
+            <td class="text-end">
+              <div class="count-chip">{{ r.files }}</div>
+            </td>
+            <td class="text-end">
+              <div class="count-chip">{{ r.boxes }}</div>
+            </td>
+            <td class="mono" style="font-size: 14px; color: var(--navy); font-weight: 500;">{{ r.actualPickupDate || '—'
+              }}</td>
+
+            <td class="mono" style="font-size: 14px;">{{ r.date || '—' }}</td>
+
+          </tr>
+        </tbody>
+      </table>
+      <div class="no-data" *ngIf="data.countDelivered() === 0">No delivered shipments found.</div>
+    </div>
   </div>
 </div>
 
@@ -115,3 +142,4 @@
     <p>Fetching delivered data...</p>
   </div>
 </ng-template>
+<div class="error-banner" *ngIf="error()">{{ error() }}</div>

@@ -37,7 +37,8 @@ export class DashboardComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.fetchCountForTab('request-for-pickup');
+    // Initial fetch for all counts to populate the top bar globally
+    Object.keys(this.statusMap).forEach(tab => this.fetchCountForTab(tab));
   }
 
   onNavClick(tab: string): void {
@@ -54,8 +55,17 @@ export class DashboardComponent implements OnInit {
         const dataArray = Array.isArray(payload) ? payload : [];
         this.counts[tab] = dataArray.length;
         
+        // Sync with global DataService stats
         if (tab === 'request-for-pickup') {
+          const totalFiles = dataArray.reduce((sum: number, r: any) => sum + (r.noOfFiles || r.No_Of_Files__c || 0), 0);
+          this.dataService.updateCounts({ pending: dataArray.length, totalFiles: totalFiles });
           this.dataService.updateKleetoFromBackend(dataArray);
+        } else if (tab === 'pickup-scheduled') {
+          this.dataService.updateCounts({ scheduled: dataArray.length });
+        } else if (tab === 'intransit') {
+          this.dataService.updateCounts({ intransit: dataArray.length });
+        } else if (tab === 'delivered') {
+          this.dataService.updateCounts({ delivered: dataArray.length });
         }
       },
       error: () => {

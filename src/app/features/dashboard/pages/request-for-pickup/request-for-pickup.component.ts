@@ -56,6 +56,9 @@ export class RequestForPickupPageComponent implements OnInit {
           actualPickupDate: r.actualPickupDate || '—'
         }));
         this.data.kleetoRequests.set(mapped);
+        // Sync global counts
+        const totalFiles = mapped.reduce((sum, r) => sum + (r.files || 0), 0);
+        this.data.updateCounts({ pending: mapped.length, totalFiles: totalFiles });
         this.loading.set(false);
       },
       error: (err) => {
@@ -97,7 +100,7 @@ export class RequestForPickupPageComponent implements OnInit {
         this.confirmLoading.set(false);
         if (res.success || res.status === 'success') {
           this.closeModal();
-          this.toast.show(`${r.branch} confirmed successfully`);
+          this.toast.show(`Pickup for branch ${r.branch} confirmed successfully`);
           this.fetchData();
         } else {
           this.toast.show(res.message || 'Failed to update pickup date', 'error');
