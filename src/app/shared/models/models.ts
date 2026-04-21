@@ -8,7 +8,10 @@ export interface PickupRequestKleeto {
   boxes: number;
   date: string;
   remarks: string;
+  ownerName: string;
+  consignmentId: string;
   state: string;
+  actualPickupDate?: string;
 }
 
 export interface DocItem {

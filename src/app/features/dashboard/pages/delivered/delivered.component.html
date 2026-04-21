@@ -1,58 +1,117 @@
-<div class="page-container" *ngIf="!loading; else loader">
-  <div class="page-header">
-    <div>
-      <h1 class="page-title">Delivered</h1>
-      <p class="page-sub">Shipments acknowledged and delivered to the vault</p>
-    </div>
-    <button class="export-btn">
-      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Export
-    </button>
-  </div>
-
-  <div class="stats">
-    <div class="stat-card">
-      <div class="stat-label">DELIVERED</div>
-      <div class="stat-value">{{ data.length }}</div>
-      <div class="stat-delta delta-green">acknowledged deliveries</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-header">
-      <div>
-        <div class="card-title">Delivered Shipments</div>
-        <div class="card-sub">Shipments successfully received at the vault</div>
+<div class="page-container" *ngIf="!loading(); else loader">
+  
+  <!-- Stat Cards Row -->
+  <div class="stat-row">
+    <div class="stat-card-val">
+      <div class="d-flex align-items-start">
+        <div class="stat-icon-tile" style="background: var(--purple-bg); color: var(--purple-brand);">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+          </svg>
+        </div>
+        <div class="stat-trend-pill" style="background: var(--purple-bg); color: var(--purple-text);">Moving</div>
       </div>
-      <span class="badge-pill" *ngIf="data.length > 0">{{ data.length }} delivered</span>
+      <div class="stat-micro-label" style="font-size: 11px; font-weight: 500; color: var(--purple-brand); letter-spacing: 0.05em; margin-bottom: 8px;">IN TRANSIT</div>
+      <div class="stat-main-number" style="font-size: 32px; font-weight: 600; margin-bottom: 8px;">{{ data.countIntransit() }}</div>
+      <div class="progress-track">
+        <div class="progress-fill" [style.width.%]="data.countIntransit() > 0 ? 100 : 0" style="background: var(--purple-brand);"></div>
+      </div>
     </div>
-    <div class="table-wrap">
-      <table *ngIf="data.length > 0">
-        <thead>
-          <tr>
-            <th>Branch</th><th>Branch Address</th><th>CSM / BM</th><th>Mobile</th>
-            <th>No. of Files</th><th>No. of Boxes</th><th>Pickup Date</th><th>Remarks</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let r of data">
-            <td class="cell-branch">{{ r.branch || r.Branch_Name__c || '—' }}</td>
-            <td class="cell-addr">{{ r.addr || r.Branch_Address__c || '—' }}</td>
-            <td>{{ r.csm || r.CSM_BM__c || '—' }}</td>
-            <td class="mono">{{ r.mob || r.Mobile__c || '—' }}</td>
-            <td class="mono">{{ r.files ?? r.No_of_Files__c ?? '—' }}</td>
-            <td class="mono">{{ r.boxes ?? r.No_of_Boxes__c ?? '—' }}</td>
-            <td class="mono">{{ r.date || r.Pickup_Date__c || '—' }}</td>
-            <td class="cell-remarks">{{ r.remarks || r.Remarks__c || '—' }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="no-data" *ngIf="data.length === 0">No delivered shipments.</div>
+
+    <div class="stat-card-val">
+      <div class="d-flex align-items-start">
+        <div class="stat-icon-tile" style="background: var(--teal-bg); color: var(--teal-brand);">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" />
+          </svg>
+        </div>
+        <div class="stat-trend-pill" style="background: var(--teal-bg); color: var(--teal-text);">Confirmed</div>
+      </div>
+      <div class="stat-micro-label" style="font-size: 11px; font-weight: 500; color: var(--teal-brand); letter-spacing: 0.05em; margin-bottom: 8px;">DELIVERED TODAY</div>
+      <div class="stat-main-number" style="font-size: 32px; font-weight: 600; margin-bottom: 8px;">{{ data.countDelivered() }}</div>
+      <div class="progress-track">
+        <div class="progress-fill" style="width: 100%; background: var(--teal-brand);"></div>
+      </div>
     </div>
+
+    <div class="stat-card-val">
+      <div class="d-flex align-items-start">
+        <div class="stat-icon-tile" style="background: var(--blue-light); color: var(--blue-brand);">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" />
+          </svg>
+        </div>
+        <div class="stat-trend-pill" style="background: var(--blue-light); color: var(--blue-brand);">Archive</div>
+      </div>
+      <div class="stat-micro-label" style="font-size: 11px; font-weight: 500; color: var(--blue-brand); letter-spacing: 0.05em; margin-bottom: 8px;">TOTAL ACKNOWLEDGED</div>
+      <div class="stat-main-number" style="font-size: 32px; font-weight: 600; margin-bottom: 8px;">{{ data.countDelivered() }}</div>
+      <div class="progress-track">
+        <div class="progress-fill" style="width: 100%; background: var(--blue-brand);"></div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="header-stack mb-4" style="margin-top: var(--sp-4);">
+    <h2 style="font-size: 24px; font-weight: 600; margin: 0 0 12px; color: var(--navy);">Delivered Shipments</h2>
+    <p style="font-size: 14px; color: var(--gray-tertiary); margin: 0 0 0;">Shipments successfully received and acknowledged at the vault</p>
+  </div>
+
+  <!-- Re-introduced Status Banner (Teal for Delivered) -->
+  <div class="banner-premium" style="background: var(--teal-bg); color: var(--teal-text); border-color: var(--teal-brand);">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" />
+    </svg>
+    <span>Great job! <strong>{{ data.countDelivered() }}</strong> total shipments have been successfully delivered and vaulted.</span>
+  </div>
+
+  <div class="table-container-premium">
+    <table class="table-premium">
+      <thead>
+        <tr>
+          <th style="width: 15%;">Branch</th>
+          <th style="width: 25%;">Address</th>
+          <th style="width: 20%;">CSM / BM</th>
+          <th class="text-end" style="width: 10%;">Files</th>
+          <th class="text-end" style="width: 10%;">Boxes</th>
+          <th style="width: 15%;">Actual Pickup Date</th>
+          <th style="width: 15%;">Delivery Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of data.kleetoRequests()">
+          <td>
+            <div class="chip-branch">
+              <svg viewBox="0 0 24 24" width="10" height="10" fill="var(--navy)">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+              </svg>
+              {{ r.branch }}
+            </div>
+          </td>
+          <td><div style="font-size: 11px; color: var(--gray-tertiary); line-height: 1.4;">{{ r.addr }}</div></td>
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              <div class="avatar-circle" style="background: var(--teal-bg); color: var(--teal-text);">
+                {{ r.ownerName?.[0] || 'D' }}{{ r.ownerName?.[1] || 'L' }}
+              </div>
+              <span style="font-size: 11px;">{{ r.ownerName }}</span>
+            </div>
+          </td>
+          <td class="text-end"><div class="count-chip">{{ r.files }}</div></td>
+          <td class="text-end"><div class="count-chip">{{ r.boxes }}</div></td>
+          <td class="mono" style="font-size: 11px; color: var(--navy); font-weight: 500;">{{ r.actualPickupDate || '—' }}</td>
+          <td class="mono" style="font-size: 11px;">{{ r.date || '—' }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="no-data" *ngIf="data.countDelivered() === 0">No delivered shipments found.</div>
   </div>
 </div>
 
 <ng-template #loader>
-  <div class="loader-state"><div class="spinner"></div><p>Fetching delivered data...</p></div>
+  <div class="loader-overlay">
+    <div class="spinner"></div>
+    <p>Fetching delivered data...</p>
+  </div>
 </ng-template>
-<div class="error-banner" *ngIf="error">{{ error }}</div>

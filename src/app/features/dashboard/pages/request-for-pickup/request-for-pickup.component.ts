@@ -1,26 +1,69 @@
-import { Component, inject, computed, signal } from '@angular/core';
+import { Component, inject, computed, signal, OnInit } from '@angular/core';
 import { DataService } from '../../../../shared/services/data.service';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { PickupRequestKleeto } from '../../../../shared/models/models';
+import { ApiService } from '../../../../core/services/api.service';
+import { UiStateService } from '../../../../core/services/ui-state.service';
 
 @Component({
   selector: 'app-request-for-pickup-page',
   templateUrl: './request-for-pickup.component.html',
   styleUrls: ['./request-for-pickup.component.scss']
 })
-export class RequestForPickupPageComponent {
-  data  = inject(DataService);
+export class RequestForPickupPageComponent implements OnInit {
+  data = inject(DataService);
   toast = inject(ToastService);
+  api = inject(ApiService);
+  ui = inject(UiStateService);
 
-  pending   = computed(() => this.data.kleetoRequests().filter(r => r.state === 'pending'));
-  scheduled = computed(() => this.data.kleetoRequests().filter(r => r.state === 'scheduled'));
-  totalFiles = computed(() => this.pending().reduce((s, r) => s + r.files, 0));
+  loading = signal(false);
+  confirmLoading = signal(false);
+  error = signal('');
 
-  showModal       = signal(false);
+  showModal = signal(false);
   selectedRequest = signal<PickupRequestKleeto | null>(null);
-  confirmDate     = signal('');
-  confirmPOD      = signal('');
-  formError       = signal(false);
+  confirmDate = signal('');
+  confirmPOD = signal('');
+  formError = signal(false);
+
+  ngOnInit(): void {
+    this.ui.setPageTitle(
+      'Request for Pickup',
+      'Incoming pickup requests from HomeFirst — confirm to schedule',
+      ['Operations', 'Request for Pickup']
+    );
+    this.fetchData();
+  }
+
+  fetchData(): void {
+    this.loading.set(true);
+    this.api.get<any>('/pickup-requests?status=Requested').subscribe({
+      next: (res) => {
+        const records = res.data || res.records || (Array.isArray(res) ? res : []);
+        const mapped: PickupRequestKleeto[] = records.map((r: any) => ({
+          id: r.id || r.Id || r.Name || Math.random().toString(),
+          branch: r.branchName || r.Branch_Name__r?.Name || r.Branch_Name__c || '—',
+          addr: r.branchAddress || r.Branch_Name__r?.Branch_Address_line_1__c || r.Branch_Address__c || '—',
+          csm: r.ownerName || r.BM_BMD__c || r.CSM_BM__c || '—',
+          mob: r.mobile || r.Mobile__c || '—',
+          files: r.noOfFiles ?? r.No_Of_Files__c ?? r.No_of_Files__c ?? 0,
+          boxes: r.noOfBoxes ?? r.Number_Of_Boxes__c ?? r.Number_of_Boxes__c ?? 0,
+          date: r.requestedDate || r.Requested_Pickup_Date__c || r.Pickup_Date__c || '—',
+          remarks: r.remarks || r.Remarks__c || '—',
+          ownerName: r.ownerName || r.Owner?.Name || '—',
+          consignmentId: r.consignmentId || r.Consignment_ID__c || '—',
+          state: 'pending',
+          actualPickupDate: r.actualPickupDate || '—'
+        }));
+        this.data.kleetoRequests.set(mapped);
+        this.loading.set(false);
+      },
+      error: (err) => {
+        this.error.set('Failed to load pending requests. Please try again.');
+        this.loading.set(false);
+      }
+    });
+  }
 
   openConfirmModal(r: PickupRequestKleeto): void {
     this.selectedRequest.set(r);
@@ -40,11 +83,30 @@ export class RequestForPickupPageComponent {
       return;
     }
     const r = this.selectedRequest()!;
-    const dateStr = new Date(this.confirmDate()).toLocaleDateString('en-IN', {
-      day: '2-digit', month: '2-digit', year: 'numeric'
+    this.confirmLoading.set(true);
+
+    const payload = {
+      recordId: r.id,
+      consignmentId: r.consignmentId,
+      pod: this.confirmPOD().trim(),
+      estimatedPickupDate: this.confirmDate()
+    };
+
+    this.api.post<any>('/update-pickup-date', payload).subscribe({
+      next: (res) => {
+        this.confirmLoading.set(false);
+        if (res.success || res.status === 'success') {
+          this.closeModal();
+          this.toast.show(`${r.branch} confirmed successfully`);
+          this.fetchData();
+        } else {
+          this.toast.show(res.message || 'Failed to update pickup date', 'error');
+        }
+      },
+      error: () => {
+        this.confirmLoading.set(false);
+        this.toast.show('Error updating pickup date. Please try again.', 'error');
+      }
     });
-    this.data.confirmPickup(r.id, this.confirmPOD().trim(), dateStr);
-    this.closeModal();
-    this.toast.show(`${r.branch} confirmed · POD: ${this.confirmPOD()} → moved to Pickup Scheduled`);
   }
 }

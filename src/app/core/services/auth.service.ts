@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -19,7 +19,6 @@ export class AuthService {
   login(credentials: { username: string; password: string }): Observable<any> {
     return this.apiService.post<any>('/login', credentials).pipe(
       tap(response => {
-        // Handle Kotlin ApiResponse structure
         const token = response.data?.accessToken || response.accessToken;
         const refreshToken = response.data?.refreshToken || response.refreshToken;
         if (token) {
@@ -33,12 +32,26 @@ export class AuthService {
     );
   }
 
+  refreshToken(): Observable<any> {
+    const refreshToken = this.getRefreshToken();
+    if (!refreshToken) {
+      return throwError(() => new Error('No refresh token available'));
+    }
+    return this.apiService.post<any>('/refresh', { refreshToken }).pipe(
+      tap(response => {
+        const newAccessToken = response.data?.accessToken || response.accessToken;
+        if (newAccessToken) {
+          this.setToken(newAccessToken);
+        }
+      })
+    );
+  }
+
   logout(): void {
-    const refreshToken = localStorage.getItem('refresh-token'); // Assuming we store this, or just pass empty if not.
-    // Call the backend to invalidate tokens
+    const refreshToken = this.getRefreshToken();
     this.apiService.post('/logout', { refreshToken }).subscribe({
       next: () => this.clearSession(),
-      error: () => this.clearSession() // Clear session even if backend fails
+      error: () => this.clearSession()
     });
   }
 
@@ -55,6 +68,10 @@ export class AuthService {
 
   getToken(): string | null {
     return localStorage.getItem(this.TOKEN_KEY);
+  }
+
+  getRefreshToken(): string | null {
+    return localStorage.getItem('refresh-token');
   }
 
   hasToken(): boolean {

@@ -35,7 +35,6 @@ import { PickupRequestKleeto } from '../../shared/models/models';
           <div class="card-title">Incoming Pickup Requests</div>
           <div class="card-sub">Requests from HomeFirst branches awaiting Kleeto confirmation</div>
         </div>
-        <span class="badge badge-pending" style="font-size:12px;padding:4px 12px;">{{ pending().length }} pending</span>
       </div>
       <div style="overflow-x:auto;">
         <table>
@@ -109,18 +108,18 @@ import { PickupRequestKleeto } from '../../shared/models/models';
   `
 })
 export class RequestForPickupComponent {
-  data  = inject(DataService);
+  data = inject(DataService);
   toast = inject(ToastService);
 
-  pending   = computed(() => this.data.kleetoRequests().filter(r => r.state === 'pending'));
+  pending = computed(() => this.data.kleetoRequests().filter(r => r.state === 'pending'));
   scheduled = computed(() => this.data.kleetoRequests().filter(r => r.state === 'scheduled'));
   totalFiles = computed(() => this.pending().reduce((s, r) => s + r.files, 0));
 
-  showModal     = signal(false);
+  showModal = signal(false);
   selectedRequest = signal<PickupRequestKleeto | null>(null);
-  confirmDate   = signal('');
-  confirmPOD    = signal('');
-  formError     = signal(false);
+  confirmDate = signal('');
+  confirmPOD = signal('');
+  formError = signal(false);
 
   openConfirmModal(r: PickupRequestKleeto): void {
     this.selectedRequest.set(r);

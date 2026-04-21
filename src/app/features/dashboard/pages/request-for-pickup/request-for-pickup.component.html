@@ -1,66 +1,141 @@
-<div class="page-container">
-  <div class="page-header">
-    <div>
-      <h1 class="page-title">Request for Pickup</h1>
-      <p class="page-sub">Incoming pickup requests from HomeFirst — confirm to schedule</p>
-    </div>
-    <button class="export-btn">
-      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Export
-    </button>
-  </div>
-
-  <!-- Stats -->
-  <div class="stats">
-    <div class="stat-card">
-      <div class="stat-label">NEW REQUESTS</div>
-      <div class="stat-value">{{ pending().length }}</div>
-      <div class="stat-delta delta-orange">awaiting confirmation</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">SCHEDULED TODAY</div>
-      <div class="stat-value">{{ scheduled().length }}</div>
-      <div class="stat-delta delta-green">confirmed by Kleeto</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">TOTAL FILES</div>
-      <div class="stat-value">{{ totalFiles() }}</div>
-      <div class="stat-delta">pending requests</div>
-    </div>
-  </div>
-
-  <!-- Data Table -->
-  <div class="card">
-    <div class="card-header">
-      <div>
-        <div class="card-title">Incoming Pickup Requests</div>
-        <div class="card-sub">Requests from HomeFirst branches awaiting Kleeto confirmation</div>
+<div class="page-container" *ngIf="!loading(); else loader">
+  
+  <!-- Stat Cards Row -->
+  <div class="stat-row">
+    <!-- New Requests -->
+    <div class="stat-card-val">
+      <div class="d-flex align-items-start">
+        <div class="stat-icon-tile" style="background: var(--amber-bg); color: #854F0B;">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+          </svg>
+        </div>
+        <div class="stat-trend-pill" style="background: var(--amber-bg); color: var(--amber-text);">
+          +{{ data.countPending() }} new
+        </div>
       </div>
-      <span class="badge-pill" *ngIf="pending().length > 0">{{ pending().length }} pending</span>
+      <div class="stat-micro-label" style="font-size: 11px; font-weight: 500; color: var(--amber-brand); letter-spacing: 0.05em; margin-bottom: 8px;">NEW REQUESTS</div>
+      <div class="stat-main-number" style="font-size: 32px; font-weight: 600; margin-bottom: 8px;">{{ data.countPending() }}</div>
+      <div class="progress-track">
+        <div class="progress-fill" style="width: 100%; background: var(--amber-brand);"></div>
+      </div>
     </div>
-    <div class="table-wrap">
-      <table *ngIf="pending().length > 0">
-        <thead>
-          <tr>
-            <th>Branch</th><th>Branch Address</th><th>CSM / BM</th><th>Mobile</th>
-            <th>No. of Files</th><th>No. of Boxes</th><th>Pickup Date</th><th>Remarks</th><th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let r of pending()">
-            <td class="cell-branch">{{ r.branch }}</td>
-            <td class="cell-addr">{{ r.addr }}</td>
-            <td>{{ r.csm }}</td>
-            <td class="mono">{{ r.mob }}</td>
-            <td class="mono">{{ r.files }}</td>
-            <td class="mono">{{ r.boxes }}</td>
-            <td class="mono">{{ r.date }}</td>
-            <td class="cell-remarks">{{ r.remarks }}</td>
-            <td><button class="btn-confirm" (click)="openConfirmModal(r)">✓ Confirm Pickup</button></td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="no-data" *ngIf="pending().length === 0">No pending requests.</div>
+    <!-- Scheduled Today -->
+    <div class="stat-card-val">
+      <div class="d-flex align-items-start">
+        <div class="stat-icon-tile" style="background: var(--teal-bg); color: #0F6E56;">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <div class="stat-trend-pill" style="background: var(--teal-bg); color: var(--teal-text);">Confirmed</div>
+      </div>
+      <div class="stat-micro-label" style="font-size: 11px; font-weight: 500; color: var(--teal-brand); letter-spacing: 0.05em; margin-bottom: 8px;">SCHEDULED TODAY</div>
+      <div class="stat-main-number" style="font-size: 32px; font-weight: 600; margin-bottom: 8px;">{{ data.countScheduled() }}</div>
+      <div class="progress-track">
+        <div class="progress-fill" [style.width.%]="data.countScheduled() > 0 ? 100 : 0" style="background: var(--teal-brand);"></div>
+      </div>
+    </div>
+
+    <!-- Total Files -->
+    <div class="stat-card-val">
+      <div class="d-flex align-items-start">
+        <div class="stat-icon-tile" style="background: var(--blue-light); color: var(--blue-brand);">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" />
+          </svg>
+        </div>
+        <div class="stat-trend-pill" style="background: var(--blue-light); color: var(--blue-brand);">Pending</div>
+      </div>
+      <div class="stat-micro-label" style="font-size: 11px; font-weight: 500; color: var(--blue-brand); letter-spacing: 0.05em; margin-bottom: 8px;">TOTAL FILES</div>
+      <div class="stat-main-number" style="font-size: 32px; font-weight: 600; margin-bottom: 8px;">{{ data.totalFilesPending() }}</div>
+      <div class="progress-track">
+        <div class="progress-fill" [style.width.%]="data.totalFilesPending() > 0 ? 30 : 0" style="background: var(--blue-brand);"></div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="header-stack mb-4" style="margin-top: var(--sp-4);">
+    <h2 style="font-size: 24px; font-weight: 600; margin: 0 0 12px; color: var(--navy);">Incoming Pickup Requests</h2>
+    <p style="font-size: 14px; color: var(--gray-tertiary); margin: 0 0 0;">From HomeFirst branches — awaiting Kleeto confirmation</p>
+  </div>
+
+  <!-- Re-introduced Status Banner (Properly Indented) -->
+  <div class="banner-premium">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5">
+      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    <span>You have <strong>{{ data.countPending() }}</strong> pending pickup requests awaiting your confirmation.</span>
+  </div>
+
+  <!-- Premium Table -->
+  <div class="table-container-premium">
+    <table class="table-premium">
+      <thead>
+        <tr>
+          <th style="width: 12%;">Branch</th>
+          <th style="width: 20%;">Address</th>
+          <th style="width: 12%;">CSM / BM</th>
+          <th style="width: 10%;">Mobile</th>
+          <th class="text-end" style="width: 7%;">Files</th>
+          <th class="text-end" style="width: 7%;">Boxes</th>
+          <th style="width: 12%;">Pickup Date</th>
+          <th style="width: 10%;">Status</th>
+          <th class="text-center" style="width: 10%;">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of data.kleetoRequests()">
+          <td>
+            <div class="chip-branch">
+              <svg viewBox="0 0 24 24" width="10" height="10" fill="var(--navy)">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+              </svg>
+              {{ r.branch }}
+            </div>
+          </td>
+          <td>
+            <div style="font-size: 11px; color: var(--gray-tertiary); max-width: 180px; line-height: 1.4;">
+              {{ r.addr }}
+            </div>
+          </td>
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              <div class="avatar-circle" style="background: var(--purple-bg); color: var(--purple-text);">
+                {{ r.ownerName?.[0] || 'S' }}{{ r.ownerName?.[1] || 'D' }}
+              </div>
+              <span style="font-size: 11px;">{{ r.ownerName || 'Smit Dama' }}</span>
+            </div>
+          </td>
+          <td class="mono" style="color: var(--gray-secondary);">{{ r.mob || '—' }}</td>
+          <td class="text-end">
+            <div class="count-chip">{{ r.files }}</div>
+          </td>
+          <td class="text-end">
+            <div class="count-chip">{{ r.boxes }}</div>
+          </td>
+          <td class="mono" style="font-size: 12px;">{{ r.date || '—' }}</td>
+          <td>
+            <div class="badge-status" style="color: var(--amber-text);">
+              <span class="dot-status" style="background: var(--amber-brand);"></span>
+              Pending
+            </div>
+          </td>
+          <td class="text-center">
+            <button class="btn-solid-blue" (click)="openConfirmModal(r)">
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              Confirm
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="no-data" *ngIf="data.countPending() === 0">
+      No pending pickup requests.
     </div>
   </div>
 
@@ -68,33 +143,52 @@
   <div class="modal-overlay" *ngIf="showModal()" (click)="closeModal()">
     <div class="modal-box" (click)="$event.stopPropagation()">
       <div class="modal-header">
-        <span class="modal-title">Confirm Pickup</span>
-        <button class="close-btn" (click)="closeModal()">×</button>
+        <span class="modal-title">Confirm Pickup Request</span>
+        <button class="btn-logout" (click)="closeModal()">×</button>
       </div>
       <div class="modal-body">
-        <div class="modal-summary">
-          <div class="modal-summary-label">Pickup Request</div>
-          <div class="modal-summary-branch">{{ selectedRequest()?.branch }}</div>
-          <div class="modal-summary-detail">
-            {{ selectedRequest()?.csm }} · {{ selectedRequest()?.files }} files · {{ selectedRequest()?.boxes }} box · Requested: {{ selectedRequest()?.date }}
+        <div style="background: var(--bg-main); padding: 12px; border-radius: 10px; margin-bottom: 20px;">
+          <div style="font-size: 10px; color: var(--gray-secondary); font-weight: 600; text-transform: uppercase;">Pickup Request</div>
+          <div style="font-size: 14px; font-weight: 600; color: var(--navy); margin-top: 4px;">{{ selectedRequest()?.branch }}</div>
+          <div style="font-size: 11px; color: var(--gray-tertiary); margin-top: 2px;">
+            {{ selectedRequest()?.ownerName }} · {{ selectedRequest()?.files }} files · {{ selectedRequest()?.boxes }} box · Requested: {{ selectedRequest()?.date }}
           </div>
         </div>
-        <div class="form-row">
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
           <div class="form-group">
-            <label class="form-label">Expected Pickup Date</label>
-            <input class="form-control" type="date" [ngModel]="confirmDate()" (ngModelChange)="confirmDate.set($event)" />
+            <label style="display: block; font-size: 11px; font-weight: 600; color: var(--gray-tertiary); margin-bottom: 6px;">Expected Pickup Date</label>
+            <input type="date" class="form-control" 
+                   style="width: 100%; border: var(--hairline); border-radius: 8px; padding: 8px 10px; font-size: 12px;"
+                   [ngModel]="confirmDate()" (ngModelChange)="confirmDate.set($event)" />
           </div>
           <div class="form-group">
-            <label class="form-label">POD / Consignment No.</label>
-            <input class="form-control" type="text" [ngModel]="confirmPOD()" (ngModelChange)="confirmPOD.set($event)" placeholder="e.g. 421012960" />
+            <label style="display: block; font-size: 11px; font-weight: 600; color: var(--gray-tertiary); margin-bottom: 6px;">POD / Consignment ID</label>
+            <input type="text" placeholder="Enter ID" class="form-control"
+                   style="width: 100%; border: var(--hairline); border-radius: 8px; padding: 8px 10px; font-size: 12px;"
+                   [ngModel]="confirmPOD()" (ngModelChange)="confirmPOD.set($event)" />
           </div>
         </div>
-        <div class="form-error" *ngIf="formError()">Please fill in both fields before confirming.</div>
+        <div style="color: #dc2626; font-size: 11px; margin-top: 10px;" *ngIf="formError()">All fields are required.</div>
       </div>
       <div class="modal-footer">
-        <button class="btn-cancel" (click)="closeModal()">Cancel</button>
-        <button class="btn-confirm" (click)="submitConfirm()">✓ Confirm Pickup</button>
+        <button class="btn-logout" style="padding: 6px 16px; font-size: 12px;" (click)="closeModal()">Cancel</button>
+        <button class="btn-solid-blue" (click)="submitConfirm()" [disabled]="confirmLoading()">
+          <span *ngIf="confirmLoading()" class="spinner-border spinner-border-sm me-2"></span>
+          {{ confirmLoading() ? 'Saving...' : 'Save' }}
+        </button>
       </div>
     </div>
   </div>
+</div>
+
+<ng-template #loader>
+  <div class="loader-overlay">
+    <div class="spinner"></div>
+    <p>Fetching incoming pickup requests...</p>
+  </div>
+</ng-template>
+
+<div class="error-banner" style="position: fixed; bottom: 20px; right: 20px; z-index: 100;" *ngIf="error()">
+  <div class="error-msg">{{ error() }}</div>
 </div>

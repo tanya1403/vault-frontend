@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { ApiService } from '../../core/services/api.service';
+import { DataService } from '../../shared/services/data.service';
+import { UiStateService } from '../../core/services/ui-state.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,6 +12,7 @@ import { ApiService } from '../../core/services/api.service';
 })
 export class DashboardComponent implements OnInit {
   viewMode: 'HomeFirst' | 'Kleeto' = 'Kleeto';
+  showRoleDropdown = signal(false);
 
   counts: Record<string, number> = {
     'request-for-pickup': 0,
@@ -19,20 +22,21 @@ export class DashboardComponent implements OnInit {
   };
 
   private statusMap: Record<string, string> = {
-    'request-for-pickup': 'created',
-    'pickup-scheduled': 'pickup-scheduled',
+    'request-for-pickup': 'Requested',
+    'pickup-scheduled': 'Scheduled',
     'intransit': 'Intransit',
-    'delivered': 'Acknowledged'
+    'delivered': 'Delivered'
   };
 
   constructor(
     private authService: AuthService,
     private apiService: ApiService,
+    private dataService: DataService,
+    public ui: UiStateService,
     public router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    // Only fetch the initial tab's count on login as requested
     this.fetchCountForTab('request-for-pickup');
   }
 
@@ -47,7 +51,12 @@ export class DashboardComponent implements OnInit {
     this.apiService.get<any>(`/pickup-requests?status=${status}`).subscribe({
       next: (res) => {
         const payload = res.data || res;
-        this.counts[tab] = Array.isArray(payload) ? payload.length : 0;
+        const dataArray = Array.isArray(payload) ? payload : [];
+        this.counts[tab] = dataArray.length;
+        
+        if (tab === 'request-for-pickup') {
+          this.dataService.updateKleetoFromBackend(dataArray);
+        }
       },
       error: () => {
         this.counts[tab] = 0;
