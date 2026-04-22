@@ -13,7 +13,6 @@ import { UiStateService } from '../../core/services/ui-state.service';
 export class DashboardComponent implements OnInit {
   viewMode: 'HomeFirst' | 'Kleeto' = 'Kleeto';
   showRoleDropdown = signal(false);
-  vaultExpanded = signal(false);
 
   counts: Record<string, number> = {
     'request-for-pickup': 0,

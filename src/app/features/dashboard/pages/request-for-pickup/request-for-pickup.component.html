@@ -85,6 +85,45 @@
       <span>You have <strong>{{ data.countPending() }}</strong> pending pickup requests awaiting your
         confirmation.</span>
     </div>
+
+    <!-- Reactive Filter Bar (Placed beneath yellow panel) -->
+    <div class="filter-bar-container" style="margin-top: var(--sp-4); padding: 0 var(--sp-4) var(--sp-2);">
+      <div class="filter-row" style="display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1px solid var(--gray-border); border-radius: 12px; padding: 4px 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+        <div class="search-group" style="display: flex; align-items: center; gap: 12px; flex: 1;">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--gray-tertiary)" stroke-width="2">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input 
+            type="text" 
+            placeholder="Search by Branch, CSM or Address..." 
+            [value]="searchTerm()"
+            (input)="searchTerm.set($any($event.target).value)"
+            style="width: 100%; border: none; outline: none; background: transparent; font-size: 14px; padding: 10px 0; color: var(--navy);"
+          >
+        </div>
+
+        <div class="filter-actions" style="display: flex; gap: 20px; align-items: center; border-left: 1px solid var(--gray-border); padding-left: 20px; margin-left: 20px;">
+          <div class="date-filter" style="display: flex; align-items: center; gap: 10px;">
+            <span class="filter-label" style="font-size: 11px; font-weight: 700; color: var(--gray-tertiary); text-transform: uppercase; letter-spacing: 0.05em;">Filter by Date</span>
+            <input 
+              type="date" 
+              [value]="dateFilter()"
+              (input)="dateFilter.set($any($event.target).value)"
+              style="border: 1px solid var(--gray-border); border-radius: 8px; padding: 6px 10px; font-size: 13px; color: var(--navy); cursor: pointer;"
+            >
+          </div>
+          
+          <button class="btn-refresh" (click)="fetchData()" [class.spinning]="loading()" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: var(--bg-main); border: 1px solid var(--gray-border); border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; color: var(--navy);">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="23 4 23 10 17 10" />
+              <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+            </svg>
+            Refresh
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Premium Table Scroll Area -->
@@ -105,7 +144,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let r of data.kleetoRequests()">
+          <tr *ngFor="let r of filteredPickups()">
             <td>
               <div class="chip-branch">
                 <svg viewBox="0 0 24 24" width="10" height="10" fill="var(--navy)">
@@ -155,8 +194,8 @@
           </tr>
         </tbody>
       </table>
-      <div class="no-data" *ngIf="data.countPending() === 0">
-        No pending pickup requests.
+      <div class="no-data" *ngIf="!loading() && filteredPickups().length === 0">
+        No pickup requests found matching your filters.
       </div>
     </div>
   </div>

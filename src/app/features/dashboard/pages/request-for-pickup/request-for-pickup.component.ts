@@ -22,6 +22,31 @@ export class RequestForPickupPageComponent implements OnInit {
   confirmLoading = signal(false);
   error = signal('');
 
+  // Filtering Signals (Branch & Date)
+  searchTerm = signal('');
+  dateFilter = signal('');
+
+  // Reactive Filtered List
+  filteredPickups = computed(() => {
+    const term = this.searchTerm().toLowerCase();
+    const df = this.dateFilter();
+    let records = this.data.kleetoRequests();
+
+    if (term) {
+      records = records.filter(r => 
+        r.branch.toLowerCase().includes(term) || 
+        r.ownerName.toLowerCase().includes(term) ||
+        r.id.toLowerCase().includes(term)
+      );
+    }
+
+    if (df) {
+      records = records.filter(r => r.date.includes(df));
+    }
+
+    return records;
+  });
+
   showModal = signal(false);
   showCancelModal = signal(false);
   selectedRequest = signal<PickupRequestKleeto | null>(null);
