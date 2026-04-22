@@ -15,12 +15,13 @@ export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
   private refreshTokenSubject = new BehaviorSubject<string | null>(null);
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const token = this.authService.getToken();
+    const isAuthRequest = request.url.includes('/login') || request.url.includes('/refresh') || request.url.includes('/logout');
 
-    if (token) {
+    if (token && !isAuthRequest) {
       request = this.addToken(request, token);
     }
 

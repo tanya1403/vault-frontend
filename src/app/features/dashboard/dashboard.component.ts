@@ -54,7 +54,7 @@ export class DashboardComponent implements OnInit {
         const payload = res.data || res;
         const dataArray = Array.isArray(payload) ? payload : [];
         this.counts[tab] = dataArray.length;
-        
+
         // Sync with global DataService stats
         if (tab === 'request-for-pickup') {
           const totalFiles = dataArray.reduce((sum: number, r: any) => sum + (r.noOfFiles || r.No_Of_Files__c || 0), 0);

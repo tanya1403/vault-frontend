@@ -41,18 +41,18 @@ export interface VaultLai {
 
 @Injectable({ providedIn: 'root' })
 export class VaultManagementService {
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService) { }
 
   getBranches(search?: string, lastBranch?: string): Observable<CursorResponse<VaultBranch>> {
     let params = new HttpParams();
-    if (search)     params = params.set('search', search);
+    if (search) params = params.set('search', search);
     if (lastBranch) params = params.set('lastBranch', lastBranch);
     return this.api.get<CursorResponse<VaultBranch>>('/branches', params);
   }
 
   getLais(branchId: string, search?: string, lastLai?: string): Observable<CursorResponse<VaultLai>> {
     let params = new HttpParams().set('branchId', branchId);
-    if (search)  params = params.set('search', search);
+    if (search) params = params.set('search', search);
     if (lastLai) params = params.set('lastLai', lastLai);
     return this.api.get<CursorResponse<VaultLai>>('/lais', params);
   }
@@ -64,10 +64,10 @@ export class VaultManagementService {
   }
 
   markAsVaulted(documentId: string): Observable<any> {
-  const body = {
-    documentId: documentId
-  };
+    const body = {
+      documentId: documentId
+    };
 
-  return this.api.post<any>(`/vault/document/mark-vaulted`, body);
-}
+    return this.api.post<any>(`/vault/document/mark-vaulted`, body);
+  }
 }

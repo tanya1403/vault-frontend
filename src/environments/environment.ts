@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://localhost:8080/youWontReplaceLPT/vault/v1'
+  apiUrl: 'http://localhost:8080/vault/v1'
 };
