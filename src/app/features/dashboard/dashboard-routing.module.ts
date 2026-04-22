@@ -6,6 +6,7 @@ import { PickupScheduledPageComponent } from './pages/pickup-scheduled/pickup-sc
 import { IntransitPageComponent } from './pages/intransit/intransit.component';
 import { DeliveredPageComponent } from './pages/delivered/delivered.component';
 import { VaultManagementPageComponent } from './pages/vault-management/vault-management.component';
+import { CancelledPickupPageComponent } from './pages/cancelled-pickup/cancelled-pickup.component';
 
 const routes: Routes = [
   {
@@ -18,6 +19,7 @@ const routes: Routes = [
       { path: 'intransit', component: IntransitPageComponent },
       { path: 'delivered', component: DeliveredPageComponent },
       { path: 'vault-management', component: VaultManagementPageComponent },
+      { path: 'cancelled-pickup', component: CancelledPickupPageComponent },
     ]
   }
 ];

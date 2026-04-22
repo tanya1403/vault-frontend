@@ -39,6 +39,16 @@ export interface VaultLai {
   sentToKleetoDate: string;
 }
 
+export interface CancelledPickup {
+  id: string;
+  branchName: string;
+  csmName: string;
+  pickupDate: string;
+  cancelledDate: string;
+  reason: string;
+  status: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class VaultManagementService {
   constructor(private api: ApiService) { }
@@ -61,6 +71,21 @@ export class VaultManagementService {
     let params = new HttpParams().set('lai', lai);
     if (lastCreatedDate) params = params.set('lastCreatedDate', lastCreatedDate);
     return this.api.get<CursorResponse<VaultDocument>>('/documents', params);
+  }
+
+  cancelPickup(recordId: string, reason: string): Observable<any> {
+    // Mocked for now as requested
+    console.log('Mocking cancellation for:', recordId, reason);
+    return new Observable(obs => {
+      setTimeout(() => {
+        obs.next({ isSuccess: true, message: `Pickup ${recordId} cancelled.` });
+        obs.complete();
+      }, 500);
+    });
+  }
+
+  getCancelledPickups(): Observable<CursorResponse<CancelledPickup>> {
+    return this.api.get<CursorResponse<CancelledPickup>>('/vault/pickups/cancelled');
   }
 
   markAsVaulted(documentId: string): Observable<any> {

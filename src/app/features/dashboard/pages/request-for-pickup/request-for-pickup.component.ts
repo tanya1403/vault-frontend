@@ -4,6 +4,7 @@ import { ToastService } from '../../../../shared/services/toast.service';
 import { PickupRequestKleeto } from '../../../../shared/models/models';
 import { ApiService } from '../../../../core/services/api.service';
 import { UiStateService } from '../../../../core/services/ui-state.service';
+import { VaultManagementService } from '../../../../core/services/vault-management.service';
 
 @Component({
   selector: 'app-request-for-pickup-page',
@@ -15,15 +16,18 @@ export class RequestForPickupPageComponent implements OnInit {
   toast = inject(ToastService);
   api = inject(ApiService);
   ui = inject(UiStateService);
+  vaultService = inject(VaultManagementService);
 
   loading = signal(false);
   confirmLoading = signal(false);
   error = signal('');
 
   showModal = signal(false);
+  showCancelModal = signal(false);
   selectedRequest = signal<PickupRequestKleeto | null>(null);
   confirmDate = signal('');
   confirmPOD = signal('');
+  cancelReason = signal('');
   formError = signal(false);
 
   ngOnInit(): void {
@@ -33,6 +37,34 @@ export class RequestForPickupPageComponent implements OnInit {
       ['Operations', 'Request for Pickup']
     );
     this.fetchData();
+  }
+
+  openCancelModal(r: PickupRequestKleeto): void {
+    this.selectedRequest.set(r);
+    this.cancelReason.set('');
+    this.showCancelModal.set(true);
+  }
+
+  closeCancelModal(): void {
+    this.showCancelModal.set(false);
+  }
+
+  submitCancel(): void {
+    if (!this.cancelReason().trim()) {
+      this.toast.show('Please provide a cancellation reason', 'error');
+      return;
+    }
+    const r = this.selectedRequest()!;
+    this.vaultService.cancelPickup(r.id, this.cancelReason()).subscribe({
+      next: (res) => {
+        this.closeCancelModal();
+        this.toast.show(`Pickup for branch ${r.branch} has been cancelled.`);
+        this.fetchData();
+      },
+      error: () => {
+        this.toast.show('Failed to cancel pickup', 'error');
+      }
+    });
   }
 
   fetchData(): void {

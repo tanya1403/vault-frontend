@@ -13,19 +13,22 @@ import { UiStateService } from '../../core/services/ui-state.service';
 export class DashboardComponent implements OnInit {
   viewMode: 'HomeFirst' | 'Kleeto' = 'Kleeto';
   showRoleDropdown = signal(false);
+  vaultExpanded = signal(false);
 
   counts: Record<string, number> = {
     'request-for-pickup': 0,
     'pickup-scheduled': 0,
     'intransit': 0,
-    'delivered': 0
+    'delivered': 0,
+    'cancelled-pickup': 0
   };
 
   private statusMap: Record<string, string> = {
     'request-for-pickup': 'Requested',
     'pickup-scheduled': 'Scheduled',
     'intransit': 'Intransit',
-    'delivered': 'Delivered'
+    'delivered': 'Delivered',
+    'cancelled-pickup': 'Cancelled'
   };
 
   constructor(

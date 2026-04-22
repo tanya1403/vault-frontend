@@ -1,0 +1,51 @@
+<div class="page-container">
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Cancelled Pickups</div>
+        <div class="card-sub">History of pickup requests that were cancelled before completion</div>
+      </div>
+    </div>
+    
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Branch</th>
+            <th>CSM / BM</th>
+            <th>Scheduled Date</th>
+            <th>Cancellation Date</th>
+            <th>Reason</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of cancelledPickups">
+            <td class="mono" style="font-weight: 600; color: var(--blue-brand);">{{ p.id }}</td>
+            <td style="font-weight: 500;">{{ p.branchName }}</td>
+            <td>{{ p.csmName }}</td>
+            <td class="mono">{{ p.pickupDate | date:'dd MMM yyyy' }}</td>
+            <td class="mono">{{ p.cancelledDate | date:'dd MMM yyyy' }}</td>
+            <td style="color: var(--gray-secondary); max-width: 250px; font-size: 13px;">{{ p.reason }}</td>
+            <td>
+              <span class="badge" style="background: #fef2f2; color: #ef4444; border: 1px solid #fecaca; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">{{ p.status }}</span>
+            </td>
+          </tr>
+          
+          <tr *ngIf="loading">
+            <td colspan="7" style="text-align: center; padding: 2rem; color: var(--gray-secondary);">
+              Loading cancelled pickups...
+            </td>
+          </tr>
+          
+          <tr *ngIf="!loading && cancelledPickups.length === 0">
+            <td colspan="7" style="text-align: center; padding: 2rem; color: var(--gray-secondary);">
+              No cancelled pickups found.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -167,7 +167,7 @@ export class VaultManagementPageComponent implements OnInit, OnDestroy {
   markAsVaulted(doc: VaultDocument): void {
     this.vaultService.markAsVaulted(doc.id).subscribe({
       next: (res) => {
-        if (res && res.isSuccess) {
+        if (res && (res.isSuccess || res.success || res.status === 'success')) {
           doc.status = 'Vaulted'; // Assume client side update for immediate feedback
           doc.vaultingDate = new Date().toISOString(); // Trigger button hide
           this.showCustomToast(res.message || `Document vaulted successfully.`, 'success');

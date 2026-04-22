@@ -11,6 +11,7 @@ import { PickupScheduledPageComponent } from './pages/pickup-scheduled/pickup-sc
 import { IntransitPageComponent } from './pages/intransit/intransit.component';
 import { DeliveredPageComponent } from './pages/delivered/delivered.component';
 import { VaultManagementPageComponent } from './pages/vault-management/vault-management.component';
+import { CancelledPickupPageComponent } from './pages/cancelled-pickup/cancelled-pickup.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { VaultManagementPageComponent } from './pages/vault-management/vault-man
     PickupScheduledPageComponent,
     IntransitPageComponent,
     DeliveredPageComponent,
-    VaultManagementPageComponent
+    VaultManagementPageComponent,
+    CancelledPickupPageComponent
   ],
   imports: [
     CommonModule,

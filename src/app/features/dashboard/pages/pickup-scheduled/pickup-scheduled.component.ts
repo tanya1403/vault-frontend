@@ -3,6 +3,7 @@ import { ApiService } from '../../../../core/services/api.service';
 import { DataService } from '../../../../shared/services/data.service';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { UiStateService } from '../../../../core/services/ui-state.service';
+import { VaultManagementService } from '../../../../core/services/vault-management.service';
 import { PickupRequestKleeto } from '../../../../shared/models/models';
 
 @Component({
@@ -15,14 +16,17 @@ export class PickupScheduledPageComponent implements OnInit {
   data = inject(DataService);
   toast = inject(ToastService);
   ui = inject(UiStateService);
+  vaultService = inject(VaultManagementService);
 
   loading = signal(true);
   error = signal('');
 
   // Modal State
   showModal = signal(false);
+  showCancelModal = signal(false);
   selectedRequest = signal<PickupRequestKleeto | null>(null);
   confirmDate = signal('');
+  cancelReason = signal('');
   confirmLoading = signal(false);
   formError = signal(false);
 
@@ -33,6 +37,34 @@ export class PickupScheduledPageComponent implements OnInit {
       ['Operations', 'Pickup Scheduled']
     );
     this.fetchData();
+  }
+
+  openCancelModal(r: PickupRequestKleeto): void {
+    this.selectedRequest.set(r);
+    this.cancelReason.set('');
+    this.showCancelModal.set(true);
+  }
+
+  closeCancelModal(): void {
+    this.showCancelModal.set(false);
+  }
+
+  submitCancel(): void {
+    if (!this.cancelReason().trim()) {
+      this.toast.show('Please provide a cancellation reason', 'error');
+      return;
+    }
+    const r = this.selectedRequest()!;
+    this.vaultService.cancelPickup(r.id, this.cancelReason()).subscribe({
+      next: () => {
+        this.closeCancelModal();
+        this.toast.show(`Scheduled pickup for ${r.branch} has been cancelled.`);
+        this.fetchData();
+      },
+      error: () => {
+        this.toast.show('Failed to cancel pickup', 'error');
+      }
+    });
   }
 
   fetchData(): void {
