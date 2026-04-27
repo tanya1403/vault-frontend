@@ -16,18 +16,27 @@
 
   <!-- PANEL 1: Branch list -->
   <ng-container *ngIf="panel === 'branches'">
-    <div class="filter-bar" style="display: flex; gap: 12px; margin-bottom: 24px; align-items: center;">
-      <input type="text" placeholder="Search branch…" [(ngModel)]="searchBranchTerm"
-        (ngModelChange)="onSearchBranchChange()"
-        style="padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 6px; width: 300px; font-size: 14px;" />
-      <span style="margin-left:auto;font-size:12px;color:#64748b;">{{ branches.length }} requests</span>
+    <div class="search-container" style="margin-bottom: 24px;">
+      <div class="search-bar-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" 
+               class="branch-search-input"
+               placeholder="Search by branch name, address, or manager..." 
+               [(ngModel)]="searchBranchTerm"
+               (ngModelChange)="onSearchBranchChange()" />
+        <div class="search-results-badge">
+          {{ branches.length }} results
+        </div>
+      </div>
     </div>
 
     <div class="card">
       <div class="card-header">
         <div>
-          <div class="card-title">Pickup Requests</div>
-          <div class="card-sub">Salesforce Document List · Click any row to see LAIs & documents</div>
+          <div class="card-title">Branches</div>
         </div>
       </div>
       <div class="table-wrap">
@@ -69,11 +78,9 @@
     </div>
   </ng-container>
 
-  <!-- PANEL 2: LAI list -->
   <ng-container *ngIf="panel === 'lais'">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-      <button class="btn sm" (click)="goPanel('branches')"
-        style="border: 1px solid #e2e8f0; background: white; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 500;">
+    <div class="panel-nav" style="margin-bottom: 20px;">
+      <button class="btn-outline sm" (click)="goPanel('branches')">
         ← Back to Branches
       </button>
     </div>
@@ -100,39 +107,85 @@
       </div>
       <div class="stat-card" style="padding: 1rem 1.5rem; background: #f8fafc;">
         <div class="stat-label">Total Documents</div>
-        <div class="stat-value" style="font-size: 1.5rem; color: #2563eb;">—</div>
+        <div class="stat-value" style="font-size: 1.5rem; color: #2563eb;">{{ selectedBranch?.totalDocuments || 0 }}</div>
+      </div>
+    </div>
+
+    <div class="search-container" style="margin-bottom: 24px;">
+      <div class="search-bar-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" 
+               class="branch-search-input"
+               placeholder="Search by LAI number..." 
+               [(ngModel)]="searchLaiTerm"
+               (ngModelChange)="onSearchLaiChange()" />
+        <div class="search-results-badge">
+          {{ lais.length }} results
+        </div>
       </div>
     </div>
 
     <div class="card">
-      <div class="card-header">
-        <div>
+      <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; padding: 16px 24px;">
+        <div style="flex: 1;">
           <div class="card-title">{{ selectedBranch?.branchName }} — LAI Document Lists</div>
-          <div class="card-sub">1 row = 1 customer LAI → 1 Salesforce Document List · Click to view Document Items</div>
+        </div>
+
+        <div class="header-actions" style="margin-left: 20px;">
+          <button *ngIf="!isSelectionMode" class="btn-primary" (click)="toggleSelectionMode()">
+            Acknowledge LAIs
+          </button>
+          
+          <div *ngIf="isSelectionMode" style="display: flex; gap: 12px; align-items: center;">
+            <button class="btn-ghost" (click)="toggleSelectionMode()">
+              Cancel
+            </button>
+            <button class="btn-primary" 
+              [disabled]="selectedLaisForAck.size === 0"
+              (click)="openAckModal()">
+              Save Selected {{ selectedLaisForAck.size > 0 ? '(' + selectedLaisForAck.size + ')' : '' }}
+            </button>
+          </div>
         </div>
       </div>
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th></th>
+              <th style="width: 50px; text-align: center;">
+                <ng-container *ngIf="isSelectionMode">
+                  <input type="checkbox" class="styled-checkbox" 
+                         [checked]="isAllLaisSelected()" 
+                         (change)="toggleAllLaisSelection($event)" />
+                </ng-container>
+                <span *ngIf="!isSelectionMode" style="color: #94a3b8; font-size: 11px;">#</span>
+              </th>
               <th>LAI Number</th>
               <th>Customer Name</th>
               <th>No. of Files</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let lai of lais" class="clickable-row" (click)="openLAI(lai)" style="cursor: pointer;">
-              <td style="color:#2563eb; font-size: 18px; font-weight: 600; padding: 0 10px 0 20px;">›</td>
+            <tr *ngFor="let lai of lais; let i = index" class="clickable-row" (click)="isSelectionMode ? toggleLaiSelection(lai.lai, $event) : openLAI(lai)">
+              <td style="text-align: center; vertical-align: middle;">
+                <div *ngIf="!isSelectionMode" style="color: #94a3b8; font-size: 13px; font-weight: 500; font-family: mono;">{{ i + 1 }}</div>
+                <input *ngIf="isSelectionMode" type="checkbox" class="styled-checkbox" 
+                       [checked]="selectedLaisForAck.has(lai.lai)" 
+                       (click)="$event.stopPropagation()"
+                       (change)="toggleLaiSelection(lai.lai, $event)" />
+              </td>
               <td class="mono" style="font-weight:700; color: #2563eb;">{{ lai.lai }}</td>
               <td style="font-weight:500;">{{ lai.customerName || '—' }}</td>
               <td class="mono" style="font-weight:700; color: #2563eb;">{{ lai.totalFiles }}</td>
             </tr>
             <tr *ngIf="loadingLais">
-              <td colspan="4" style="text-align: center; padding: 2rem; color: #94a3b8;">Loading...</td>
+              <td colspan="5" style="text-align: center; padding: 2rem; color: #94a3b8;">Loading...</td>
             </tr>
             <tr *ngIf="!loadingLais && lais.length === 0">
-              <td colspan="4" style="text-align: center; padding: 2rem; color: #94a3b8;">No LAIs found.</td>
+              <td colspan="5" style="text-align: center; padding: 2rem; color: #94a3b8;">No LAIs found.</td>
             </tr>
           </tbody>
         </table>
@@ -145,11 +198,12 @@
     </div>
   </ng-container>
 
+
   <!-- PANEL 3: Document Items -->
   <ng-container *ngIf="panel === 'items'">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-      <button class="btn sm" (click)="goPanel('lais')"
-        style="border: 1px solid #e2e8f0; background: white; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 500;">
+      <button class="btn-outline sm" (click)="goPanel('lais')"
+        style="border: 1px solid #e2e8f0; background: white;">
         ← Back to LAIs
       </button>
     </div>
@@ -174,17 +228,40 @@
     </div>
 
     <div class="card">
-      <div class="card-header">
-        <div>
+      <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; padding: 16px 24px;">
+        <div style="flex: 1;">
           <div class="card-title">{{ selectedLai?.lai }} — Document Items ({{ selectedLai?.customerName || '—' }})</div>
-          <div class="card-sub">Child records of Salesforce Document List</div>
+        </div>
+
+        <div class="header-actions" style="margin-left: 20px;">
+          <button *ngIf="!isDocSelectionMode" class="btn-primary" (click)="toggleDocSelectionMode()">
+            Mark as Vaulted
+          </button>
+          
+          <div *ngIf="isDocSelectionMode" style="display: flex; gap: 12px; align-items: center;">
+            <button class="btn-ghost" (click)="toggleDocSelectionMode()">
+              Cancel
+            </button>
+            <button class="btn-primary" 
+              [disabled]="selectedDocsForVaulting.size === 0"
+              (click)="openVaultModal()">
+              Save Selected {{ selectedDocsForVaulting.size > 0 ? '(' + selectedDocsForVaulting.size + ')' : '' }}
+            </button>
+          </div>
         </div>
       </div>
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th>#</th>
+              <th style="width: 50px; text-align: center;">
+                <ng-container *ngIf="isDocSelectionMode">
+                  <input type="checkbox" class="styled-checkbox" 
+                         [checked]="isAllDocsSelected()" 
+                         (change)="toggleAllDocsSelection($event)" />
+                </ng-container>
+                <span *ngIf="!isDocSelectionMode" style="color: #94a3b8; font-size: 11px;">#</span>
+              </th>
               <th>Category</th>
               <th>Subcategory</th>
               <th>Label</th>
@@ -195,22 +272,31 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let d of documents; let i = index">
-              <td class="mono" style="color:#94a3b8;">{{ i + 1 }}</td>
+            <tr *ngFor="let d of documents; let i = index" [class.clickable-row]="isDocSelectionMode && !d.vaultingDate" (click)="isDocSelectionMode && !d.vaultingDate ? toggleDocSelection(d.id, $event) : null">
+              <td style="text-align: center; vertical-align: middle;">
+                <div *ngIf="!isDocSelectionMode" style="color:#94a3b8;" class="mono">{{ i + 1 }}</div>
+                <input *ngIf="isDocSelectionMode" type="checkbox" class="styled-checkbox" 
+                       [checked]="selectedDocsForVaulting.has(d.id)" 
+                       [disabled]="d.vaultingDate"
+                       (click)="$event.stopPropagation()"
+                       (change)="toggleDocSelection(d.id, $event)" />
+              </td>
               <td style="font-weight:500;">{{ d.category }}</td>
               <td style="font-weight:500;">{{ d.subCategory }}</td>
               <td style="font-weight:500;">{{ d.label }}</td>
               <td>
                 <span class="badge badge-{{ d.type }}">{{ d.type }}</span>
               </td>
-              <td>{{ d.sentToKleeto }}</td>
-              <td>{{ d.vaultingDate ? d.vaultingDate : '—' }}</td>
+              <td class="mono" style="font-size: 12px;">{{ formatVaultingDate(d.sentToKleeto) }}</td>
+              <td class="mono" style="font-size: 12px; font-weight: 600; color: #059669;">{{ formatVaultingDate(d.vaultingDate) }}</td>
               <td>
-                <button *ngIf="!d.vaultingDate" class="btn sm"
+                <button *ngIf="!d.vaultingDate && !isDocSelectionMode" class="btn sm"
                   style="background:#ecfdf5;color:#059669;border:1px solid #a7f3d0; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap;"
                   (click)="markAsVaulted(d)">
                   ✓ Mark Vaulted
                 </button>
+                <span *ngIf="d.vaultingDate" class="badge badge-acked" style="font-size: 11px;">VAULTED</span>
+                <span *ngIf="!d.vaultingDate && isDocSelectionMode" style="color: #94a3b8; font-size: 11px; font-style: italic;">Select to vault</span>
               </td>
             </tr>
             <tr *ngIf="loadingDocs">
@@ -255,4 +341,98 @@
       </button>
     </div>
   </div>
+
+  <!-- Acknowledgement Confirm Modal Overlay -->
+  <div class="modal-overlay" *ngIf="showAckConfirmModal">
+    <div class="confirm-modal card shadow-2xl">
+      <div class="modal-header">
+        <div class="modal-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+        </div>
+        <div>
+          <h3 class="modal-title">Confirm Acknowledgement</h3>
+          <p class="modal-subtitle">Review the selected documents before finalizing</p>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <p class="confirm-text">
+          You are about to acknowledge <strong>{{ selectedLaisForAck.size }}</strong> customer LAIs. This action will notify stakeholders and update the record status.
+        </p>
+        
+        <div class="selected-list-container">
+          <div class="list-label">Selected LAI Numbers</div>
+          <div class="lai-column-list">
+            <div *ngFor="let laiId of getSelectedLaisList()" class="lai-row-item">
+              <span class="mono-text">{{ laiId }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button class="btn-ghost" (click)="closeAckModal()" [disabled]="isAcknowledging">
+          Cancel
+        </button>
+        <button class="btn-primary" (click)="confirmAcknowledge()" [disabled]="isAcknowledging">
+          <span *ngIf="isAcknowledging" class="spinner"></span>
+          {{ isAcknowledging ? 'Acknowledging...' : 'Confirm Acknowledgement' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Document Vaulting Confirm Modal Overlay -->
+  <div class="modal-overlay" *ngIf="showVaultConfirmModal">
+    <div class="confirm-modal card shadow-2xl">
+      <div class="modal-header">
+        <div class="modal-icon-wrap" style="background: #ecfdf5; color: #059669;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 8V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V8"></path>
+            <path d="M7 2V8H17V2"></path>
+            <path d="M7 12H17"></path>
+            <path d="M7 16H17"></path>
+          </svg>
+        </div>
+        <div>
+          <h3 class="modal-title">Confirm Document Vaulting</h3>
+          <p class="modal-subtitle">The following documents will be marked as physically vaulted</p>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <p class="confirm-text">
+          You are marking <strong>{{ selectedDocsForVaulting.size }}</strong> documents as vaulted for LAI <strong>{{ selectedLai?.lai }}</strong>. This record will be updated in Salesforce.
+        </p>
+        
+        <div class="selected-list-container">
+          <div class="list-label">Selected Documents</div>
+          <div class="lai-column-list">
+            <div *ngFor="let doc of getSelectedDocsList()" class="lai-row-item">
+              <div class="dot" style="background: #059669;"></div>
+              <div style="flex: 1;">
+                <div style="font-size: 13px; font-weight: 700;">{{ doc.label }}</div>
+                <div style="font-size: 11px; color: #64748b;">{{ doc.category }} › {{ doc.subCategory }}</div>
+              </div>
+              <span class="badge" [ngClass]="'badge-' + doc.type" style="font-size: 10px;">{{ doc.type }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button class="btn-ghost" (click)="closeVaultModal()" [disabled]="isVaulting">
+          Cancel
+        </button>
+        <button class="btn-primary" (click)="confirmVaultDocs()" [disabled]="isVaulting" style="background: linear-gradient(135deg, #059669, #047857); box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);">
+          <span *ngIf="isVaulting" class="spinner"></span>
+          {{ isVaulting ? 'Vaulting...' : 'Confirm Vaulting' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
 </div>

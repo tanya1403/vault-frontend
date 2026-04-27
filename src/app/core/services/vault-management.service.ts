@@ -88,11 +88,16 @@ export class VaultManagementService {
     return this.api.get<CursorResponse<CancelledPickup>>('/vault/pickups/cancelled');
   }
 
-  markAsVaulted(documentId: string): Observable<any> {
+  markAsVaulted(documentIds: string[], vaultingDate: string): Observable<any> {
     const body = {
-      documentId: documentId
+      documentIds: documentIds,
+      vaultingDate: vaultingDate
     };
 
     return this.api.post<any>(`/vault/document/mark-vaulted`, body);
+  }
+
+  acknowledgeLais(lais: string[]): Observable<any> {
+    return this.api.post<any>(`/vault/lai/acknowledge`, { lais });
   }
 }
