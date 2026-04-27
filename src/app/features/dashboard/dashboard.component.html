@@ -108,7 +108,7 @@
 
   <!-- Main Content -->
   <div class="main-area">
-    <header class="top-bar">
+    <header class="top-bar" *ngIf="shouldShowTopBar">
       <div class="top-left">
         <div class="breadcrumb">
           <ng-container *ngFor="let b of ui.breadcrumb(); let last = last">

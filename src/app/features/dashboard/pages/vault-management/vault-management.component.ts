@@ -3,6 +3,7 @@ import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { VaultManagementService, VaultDocument, VaultBranch, VaultLai } from '../../../../core/services/vault-management.service';
 import { ToastService } from '../../../../shared/services/toast.service';
+import { UiStateService } from '../../../../core/services/ui-state.service';
 
 type Panel = 'branches' | 'lais' | 'items';
 
@@ -70,10 +71,12 @@ export class VaultManagementPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private vaultService: VaultManagementService,
-    private toast: ToastService
+    private toast: ToastService,
+    private ui: UiStateService
   ) {}
 
   ngOnInit(): void {
+    this.ui.setPageTitle('Vault Management', 'Manage branches and document vaulting', ['Operations', 'Vault Management']);
     this.loadBranches();
     
     this.searchSub = this.searchSubject.pipe(

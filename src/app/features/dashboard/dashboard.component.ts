@@ -39,6 +39,10 @@ export class DashboardComponent implements OnInit {
     public router: Router
   ) { }
 
+  get shouldShowTopBar(): boolean {
+    return !this.router.url.includes('vault-management');
+  }
+
   ngOnInit(): void {
     // Initial fetch for all counts to populate the top bar globally
     Object.keys(this.statusMap).forEach(tab => this.fetchCountForTab(tab));
