@@ -56,6 +56,7 @@ export class RequestForPickupPageComponent implements OnInit {
   confirmDate = signal('');
   confirmPOD = signal('');
   cancelReason = signal('');
+  selectedFile = signal<File | null>(null);
   formError = signal(false);
 
   ngOnInit(): void {
@@ -142,8 +143,21 @@ export class RequestForPickupPageComponent implements OnInit {
     this.selectedRequest.set(r);
     this.confirmDate.set('');
     this.confirmPOD.set('');
+    this.selectedFile.set(null);
     this.formError.set(false);
     this.showModal.set(true);
+  }
+
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      if (file.size > 10 * 1024 * 1024) {
+        this.toast.show('File is too large (max 10MB)', 'error');
+        event.target.value = '';
+        return;
+      }
+      this.selectedFile.set(file);
+    }
   }
 
   closeModal(): void {
@@ -157,28 +171,32 @@ export class RequestForPickupPageComponent implements OnInit {
     }
     const r = this.selectedRequest()!;
     this.confirmLoading.set(true);
+    
+    const formData = new FormData();
+    formData.append('recordId', r.id);
+    formData.append('consignmentId', r.consignmentId);
+    formData.append('pod', this.confirmPOD().trim());
+    formData.append('estimatedPickupDate', this.confirmDate());
+    
+    const file = this.selectedFile();
+    if (file) {
+      formData.append('file', file);
+    }
 
-    const payload = {
-      recordId: r.id,
-      consignmentId: r.consignmentId,
-      pod: this.confirmPOD().trim(),
-      estimatedPickupDate: this.confirmDate()
-    };
-
-    this.api.post<any>('/update-pickup-date', payload).subscribe({
+    this.api.post<any>('/update-pickup-date', formData).subscribe({
       next: (res) => {
         this.confirmLoading.set(false);
         if (res.success || res.status === 'success') {
           this.closeModal();
-          this.toast.show(`Pickup for branch ${r.branch} confirmed successfully`);
+          this.toast.show(`Pickup scheduled successfully`);
           this.fetchData();
         } else {
-          this.toast.show(res.message || 'Failed to update pickup date', 'error');
+          this.toast.show(res.message || 'Failed to schedule pickup', 'error');
         }
       },
       error: () => {
         this.confirmLoading.set(false);
-        this.toast.show('Error updating pickup date. Please try again.', 'error');
+        this.toast.show('Error scheduling pickup. Please try again.', 'error');
       }
     });
   }

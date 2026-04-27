@@ -124,13 +124,12 @@ export class PickupScheduledPageComponent implements OnInit {
     const r = this.selectedRequest()!;
     this.confirmLoading.set(true);
 
-    const payload = {
-      recordId: r.id,
-      actualPickupDate: this.confirmDate(),
-      status: 'Intransit'
-    };
+    const formData = new FormData();
+    formData.append('recordId', r.id);
+    formData.append('actualPickupDate', this.confirmDate());
+    formData.append('status', 'Intransit');
 
-    this.api.post<any>('/update-pickup-date', payload).subscribe({
+    this.api.post<any>('/update-pickup-date', formData).subscribe({
       next: (res) => {
         this.confirmLoading.set(false);
         if (res.success || res.status === 'success') {

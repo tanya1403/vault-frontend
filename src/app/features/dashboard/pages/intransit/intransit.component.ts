@@ -92,13 +92,12 @@ export class IntransitPageComponent implements OnInit {
     if (!r) return;
 
     this.confirmLoading.set(true);
-    const payload = {
-      recordId: r.id,
-      deliveryDate: this.deliveryDate(),
-      status: 'Acknowledged'
-    };
+    const formData = new FormData();
+    formData.append('recordId', r.id);
+    formData.append('deliveryDate', this.deliveryDate());
+    formData.append('status', 'Acknowledged');
 
-    this.api.post('/update-pickup-date', payload).subscribe({
+    this.api.post('/update-pickup-date', formData).subscribe({
       next: () => {
         this.confirmLoading.set(false);
         this.closeModal();
