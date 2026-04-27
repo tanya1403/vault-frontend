@@ -37,7 +37,7 @@
           <svg viewBox="0 0 24 24" width="18" height="14" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M12 5v14M5 12h14" />
           </svg>
-          <span>Request for Pickup</span>
+          <span>Pickup Request</span>
           <span class="badge-blue-pill" *ngIf="counts['request-for-pickup'] > 0">{{ counts['request-for-pickup']
             }}</span>
         </li>
@@ -67,27 +67,37 @@
           </svg>
           <span>Delivered</span>
         </li>
-        <li class="nav-link" routerLink="cancelled-pickup" routerLinkActive="active" (click)="onNavClick('cancelled-pickup')">
+        <li class="nav-link" routerLink="cancelled-pickup" routerLinkActive="active"
+          (click)="onNavClick('cancelled-pickup')">
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10" /><line x1="15" y1="9" x2="9" y2="15" /><line x1="9" y1="9" x2="15" y2="15" />
+            <circle cx="12" cy="12" r="10" />
+            <line x1="15" y1="9" x2="9" y2="15" />
+            <line x1="9" y1="9" x2="15" y2="15" />
           </svg>
           <span>Cancelled Pickup</span>
         </li>
-        <li class="nav-link" routerLink="vault-management" routerLinkActive="active">
+        <li class="nav-link" routerLink="vault-management" routerLinkActive="active" *ngIf="isAdminFlag || isManagementFlag || isKleetoFlag">
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="3" y="3" width="18" height="18" rx="2" /><polyline points="9 12 11 14 15 10" />
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <polyline points="9 12 11 14 15 10" />
           </svg>
           <span>Vault Management</span>
+        </li>
+        <li class="nav-link" routerLink="user-registration" routerLinkActive="active" *ngIf="isAdminFlag">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/>
+          </svg>
+          <span>Create User</span>
         </li>
       </ul>
     </nav>
 
     <footer class="sidebar-footer">
       <div class="footer-profile">
-        <div class="profile-avatar">KA</div>
+        <div class="profile-avatar">{{ getInitials(currentUser?.fullName) }}</div>
         <div class="profile-meta">
-          <div class="profile-user">Kleeto-Admin</div>
-          <div class="profile-role">Kleeto Operations</div>
+          <div class="profile-user">{{ currentUser?.fullName || 'User' }}</div>
+          <div class="profile-role">{{ (currentUser?.roles && currentUser.roles[0]) || 'Operations' }}</div>
         </div>
         <button class="btn-logout" (click)="logout()">
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
@@ -117,26 +127,7 @@
         <p class="top-subtitle">{{ ui.pageSubtitle() }}</p>
       </div>
       <div class="top-right">
-        <button class="top-icon-btn">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-          </svg>
-        </button>
-        <button class="top-icon-btn">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-          </svg>
-        </button>
-        <button class="btn-export">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-            <polyline points="7 10 12 15 17 10" />
-            <line x1="12" y1="15" x2="12" y2="3" />
-          </svg>
-          Export
-        </button>
+        <!-- Action buttons removed for a cleaner look -->
       </div>
     </header>
 

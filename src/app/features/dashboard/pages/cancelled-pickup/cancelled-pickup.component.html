@@ -1,51 +1,189 @@
-<div class="page-container">
-  <div class="card">
-    <div class="card-header">
-      <div>
-        <div class="card-title">Cancelled Pickups</div>
-        <div class="card-sub">History of pickup requests that were cancelled before completion</div>
+<div class="page-container" *ngIf="!loading(); else loader">
+
+  <div class="page-fixed-top">
+    <!-- Stat Cards Row (5 Stages) -->
+    <div class="stat-row">
+      <!-- 1. Pickup Requested -->
+      <div class="stat-card-val" [routerLink]="['/dashboard', 'request-for-pickup']">
+        <div class="d-flex align-items-start">
+          <div class="stat-icon-tile" style="background: var(--amber-bg); color: var(--amber-brand);">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+            </svg>
+          </div>
+          <div class="stat-trend-pill" style="background: var(--amber-bg); color: var(--amber-text);">New</div>
+        </div>
+        <div class="stat-micro-label" style="font-size: 10px; font-weight: 600; color: var(--amber-brand); letter-spacing: 0.05em; margin-bottom: 4px;">REQUESTED</div>
+        <div class="stat-main-number" style="font-size: 24px; font-weight: 600;">{{ data.countPending() }}</div>
+      </div>
+
+      <!-- 2. Pickup Scheduled -->
+      <div class="stat-card-val" [routerLink]="['/dashboard', 'pickup-scheduled']">
+        <div class="d-flex align-items-start">
+          <div class="stat-icon-tile" style="background: var(--blue-light); color: var(--blue-brand);">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+              <line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
+            </svg>
+          </div>
+          <div class="stat-trend-pill" style="background: var(--blue-light); color: var(--blue-brand);">Planned</div>
+        </div>
+        <div class="stat-micro-label" style="font-size: 10px; font-weight: 600; color: var(--blue-brand); letter-spacing: 0.05em; margin-bottom: 4px;">SCHEDULED</div>
+        <div class="stat-main-number" style="font-size: 24px; font-weight: 600;">{{ data.countScheduled() }}</div>
+      </div>
+
+      <!-- 3. In Transit -->
+      <div class="stat-card-val" [routerLink]="['/dashboard', 'intransit']">
+        <div class="d-flex align-items-start">
+          <div class="stat-icon-tile" style="background: var(--purple-bg); color: var(--purple-brand);">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="1" y="3" width="15" height="13" />
+              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+              <circle cx="5.5" cy="18.5" r="2.5" /><circle cx="18.5" cy="18.5" r="2.5" />
+            </svg>
+          </div>
+          <div class="stat-trend-pill" style="background: var(--purple-bg); color: var(--purple-brand);">Moving</div>
+        </div>
+        <div class="stat-micro-label" style="font-size: 10px; font-weight: 600; color: var(--purple-brand); letter-spacing: 0.05em; margin-bottom: 4px;">IN TRANSIT</div>
+        <div class="stat-main-number" style="font-size: 24px; font-weight: 600;">{{ data.countIntransit() }}</div>
+      </div>
+
+      <!-- 4. Delivered -->
+      <div class="stat-card-val" [routerLink]="['/dashboard', 'delivered']">
+        <div class="d-flex align-items-start">
+          <div class="stat-icon-tile" style="background: var(--teal-bg); color: var(--teal-brand);">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+              <polyline points="22 4 12 14.01 9 11.01" />
+            </svg>
+          </div>
+          <div class="stat-trend-pill" style="background: var(--teal-bg); color: var(--teal-text);">Success</div>
+        </div>
+        <div class="stat-micro-label" style="font-size: 10px; font-weight: 600; color: var(--teal-brand); letter-spacing: 0.05em; margin-bottom: 4px;">DELIVERED</div>
+        <div class="stat-main-number" style="font-size: 24px; font-weight: 600;">{{ data.countDelivered() }}</div>
+      </div>
+
+      <!-- 5. Cancelled -->
+      <div class="stat-card-val" [routerLink]="['/dashboard', 'cancelled-pickup']">
+        <div class="d-flex align-items-start">
+          <div class="stat-icon-tile" style="background: #fef2f2; color: #dc2626;">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" /><line x1="15" y1="9" x2="9" y2="15" /><line x1="9" y1="9" x2="15" y2="15" />
+            </svg>
+          </div>
+          <div class="stat-trend-pill" style="background: #fef2f2; color: #dc2626;">Stopped</div>
+        </div>
+        <div class="stat-micro-label" style="font-size: 10px; font-weight: 600; color: #dc2626; letter-spacing: 0.05em; margin-bottom: 4px;">CANCELLED</div>
+        <div class="stat-main-number" style="font-size: 24px; font-weight: 600;">{{ data.countCancelled() }}</div>
       </div>
     </div>
-    
-    <div class="table-wrap">
-      <table>
+    <div class="header-stack mb-4" style="margin-top: var(--sp-6);">
+      <h2 style="font-size: 24px; font-weight: 600; margin: 0 0 12px; color: var(--navy);">Cancelled Pickups</h2>
+      <p style="font-size: 14px; color: var(--gray-tertiary); margin: 0 0 0;">History of pickup requests that were cancelled before completion</p>
+    </div>
+
+    <!-- Reactive Filter Bar -->
+    <div class="filter-bar-container" style="margin-top: var(--sp-4); padding: 0 var(--sp-4) var(--sp-2);">
+      <div class="filter-row" style="display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1px solid var(--gray-border); border-radius: 12px; padding: 4px 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+        <div class="search-group" style="display: flex; align-items: center; gap: 12px; flex: 1;">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--gray-tertiary)" stroke-width="2">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input 
+            type="text" 
+            placeholder="Search by Branch, CSM or Address..." 
+            [value]="searchTerm()"
+            (input)="searchTerm.set($any($event.target).value)"
+            style="width: 100%; border: none; outline: none; background: transparent; font-size: 14px; padding: 10px 0; color: var(--navy);"
+          >
+        </div>
+
+        <div class="filter-actions" style="display: flex; gap: 20px; align-items: center; border-left: 1px solid var(--gray-border); padding-left: 20px; margin-left: 20px;">
+          <div class="date-filter" style="display: flex; align-items: center; gap: 10px;">
+            <span class="filter-label" style="font-size: 11px; font-weight: 700; color: var(--gray-tertiary); text-transform: uppercase; letter-spacing: 0.05em;">Filter by Date</span>
+            <input 
+              type="date" 
+              [value]="dateFilter()"
+              (input)="dateFilter.set($any($event.target).value)"
+              style="border: 1px solid var(--gray-border); border-radius: 8px; padding: 6px 10px; font-size: 13px; color: var(--navy); cursor: pointer;"
+            >
+          </div>
+          
+          <button class="btn-refresh" (click)="fetchData()" [class.spinning]="loading()" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: var(--bg-main); border: 1px solid var(--gray-border); border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; color: var(--navy);">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="23 4 23 10 17 10" />
+              <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+            </svg>
+            Refresh
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-scrollable-content">
+    <div class="table-container-premium">
+      <table class="table-premium">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Branch</th>
-            <th>CSM / BM</th>
-            <th>Scheduled Date</th>
-            <th>Cancellation Date</th>
-            <th>Reason</th>
-            <th>Status</th>
+            <th style="width: 15%;">Branch</th>
+            <th style="width: 25%;">Address</th>
+            <th style="width: 15%;">CSM / BM</th>
+            <th class="text-end" style="width: 8%;">Files</th>
+            <th class="text-end" style="width: 8%;">Boxes</th>
+            <th style="width: 12%;">Requested Date</th>
+            <th style="width: 17%;">Reason</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let p of cancelledPickups">
-            <td class="mono" style="font-weight: 600; color: var(--blue-brand);">{{ p.id }}</td>
-            <td style="font-weight: 500;">{{ p.branchName }}</td>
-            <td>{{ p.csmName }}</td>
-            <td class="mono">{{ p.pickupDate | date:'dd MMM yyyy' }}</td>
-            <td class="mono">{{ p.cancelledDate | date:'dd MMM yyyy' }}</td>
-            <td style="color: var(--gray-secondary); max-width: 250px; font-size: 13px;">{{ p.reason }}</td>
+          <tr *ngFor="let r of filteredPickups()">
             <td>
-              <span class="badge" style="background: #fef2f2; color: #ef4444; border: 1px solid #fecaca; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">{{ p.status }}</span>
+              <div class="chip-branch">
+                <svg viewBox="0 0 24 24" width="10" height="10" fill="var(--navy)">
+                  <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                </svg>
+                {{ r.branch }}
+              </div>
             </td>
-          </tr>
-          
-          <tr *ngIf="loading">
-            <td colspan="7" style="text-align: center; padding: 2rem; color: var(--gray-secondary);">
-              Loading cancelled pickups...
+            <td>
+              <div style="font-size: 14px; max-width: 250px; line-height: 1.4;">
+                {{ r.addr }}
+              </div>
             </td>
-          </tr>
-          
-          <tr *ngIf="!loading && cancelledPickups.length === 0">
-            <td colspan="7" style="text-align: center; padding: 2rem; color: var(--gray-secondary);">
-              No cancelled pickups found.
+            <td>{{ r.ownerName }}</td>
+            <td class="text-end">
+              <div class="count-chip">{{ r.files }}</div>
+            </td>
+            <td class="text-end">
+              <div class="count-chip">{{ r.boxes }}</div>
+            </td>
+            <td class="mono" style="font-size: 14px;">{{ r.date || '—' }}</td>
+            <td>
+              <div style="font-size: 13px; color: #ef4444; font-weight: 500; max-width: 200px; line-height: 1.4;">
+                {{ r.remarks }}
+              </div>
             </td>
           </tr>
         </tbody>
       </table>
+      
+      <div class="no-data" *ngIf="!loading() && filteredPickups().length === 0">
+        No cancelled pickups found.
+      </div>
     </div>
   </div>
+</div>
+
+<ng-template #loader>
+  <div class="loader-overlay">
+    <div class="spinner"></div>
+    <p>Fetching cancelled pickup requests...</p>
+  </div>
+</ng-template>
+
+<!-- Error Section (Matching the error() signal) -->
+<div class="error-banner" style="position: fixed; bottom: 20px; right: 20px; z-index: 100;" *ngIf="error()">
+  <div class="error-msg" style="background: #ef4444; color: white; padding: 12px 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); font-weight: 600; font-size: 14px;">{{ error() }}</div>
 </div>

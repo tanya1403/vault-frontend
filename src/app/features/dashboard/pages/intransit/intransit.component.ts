@@ -3,6 +3,8 @@ import { ApiService } from '../../../../core/services/api.service';
 import { DataService } from '../../../../shared/services/data.service';
 import { UiStateService } from '../../../../core/services/ui-state.service';
 import { PickupRequestKleeto } from '../../../../shared/models/models';
+import { AuthService } from '../../../../core/services/auth.service';
+import { computed } from '@angular/core';
 
 @Component({
   selector: 'app-intransit-page',
@@ -13,9 +15,11 @@ export class IntransitPageComponent implements OnInit {
   api = inject(ApiService);
   data = inject(DataService);
   ui = inject(UiStateService);
+  authService = inject(AuthService);
 
   loading = signal(true);
   error = signal('');
+  isDisabled = computed(() => this.authService.isCSM());
 
   // Modal Signals
   showModal = signal(false);

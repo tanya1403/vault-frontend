@@ -13,6 +13,7 @@ import { UiStateService } from '../../core/services/ui-state.service';
 export class DashboardComponent implements OnInit {
   viewMode: 'HomeFirst' | 'Kleeto' = 'Kleeto';
   showRoleDropdown = signal(false);
+  currentUser: any;
 
   counts: Record<string, number> = {
     'request-for-pickup': 0,
@@ -39,8 +40,22 @@ export class DashboardComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // Initial fetch for all counts to populate the top bar globally
-    Object.keys(this.statusMap).forEach(tab => this.fetchCountForTab(tab));
+    this.currentUser = this.authService.getCurrentUser();
+    this.checkRoles();
+    
+    // Fetch count for the current active tab only
+    const currentTab = this.router.url.split('/').pop() || 'request-for-pickup';
+    this.fetchCountForTab(currentTab);
+  }
+
+  isAdminFlag = false;
+  isManagementFlag = false;
+  isKleetoFlag = false;
+
+  private checkRoles(): void {
+    this.isAdminFlag = this.authService.isAdmin();
+    this.isManagementFlag = this.authService.isManagement();
+    this.isKleetoFlag = this.authService.isKleeto();
   }
 
   onNavClick(tab: string): void {
@@ -68,6 +83,8 @@ export class DashboardComponent implements OnInit {
           this.dataService.updateCounts({ intransit: dataArray.length });
         } else if (tab === 'delivered') {
           this.dataService.updateCounts({ delivered: dataArray.length });
+        } else if (tab === 'cancelled-pickup') {
+          this.dataService.updateCounts({ cancelled: dataArray.length });
         }
       },
       error: () => {
@@ -78,5 +95,22 @@ export class DashboardComponent implements OnInit {
 
   logout(): void {
     this.authService.logout();
+  }
+
+  isAdmin(): boolean {
+    return this.authService.isAdmin();
+  }
+
+  isManagement(): boolean {
+    return this.authService.isManagement();
+  }
+
+  getInitials(name: string): string {
+    if (!name) return 'U';
+    const parts = name.split(' ');
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
+    return name[0].toUpperCase();
   }
 }

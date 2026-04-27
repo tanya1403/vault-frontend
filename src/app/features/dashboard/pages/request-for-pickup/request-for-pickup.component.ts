@@ -5,6 +5,7 @@ import { PickupRequestKleeto } from '../../../../shared/models/models';
 import { ApiService } from '../../../../core/services/api.service';
 import { UiStateService } from '../../../../core/services/ui-state.service';
 import { VaultManagementService } from '../../../../core/services/vault-management.service';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-request-for-pickup-page',
@@ -17,10 +18,12 @@ export class RequestForPickupPageComponent implements OnInit {
   api = inject(ApiService);
   ui = inject(UiStateService);
   vaultService = inject(VaultManagementService);
+  authService = inject(AuthService);
 
   loading = signal(false);
   confirmLoading = signal(false);
   error = signal('');
+  isDisabled = computed(() => this.authService.isCSM());
 
   // Filtering Signals (Branch & Date)
   searchTerm = signal('');
@@ -61,13 +64,23 @@ export class RequestForPickupPageComponent implements OnInit {
       'Incoming pickup requests from HomeFirst — confirm to schedule',
       ['Operations', 'Request for Pickup']
     );
-    this.fetchData();
+    
+    // Skip redundant fetch if Dashboard already populated the signal
+    if (this.data.kleetoRequests().length === 0) {
+      this.fetchData();
+    }
   }
 
   openCancelModal(r: PickupRequestKleeto): void {
     this.selectedRequest.set(r);
     this.cancelReason.set('');
     this.showCancelModal.set(true);
+  }
+  
+  clearFilters(): void {
+    this.searchTerm.set('');
+    this.dateFilter.set('');
+    this.toast.show('Filters cleared');
   }
 
   closeCancelModal(): void {

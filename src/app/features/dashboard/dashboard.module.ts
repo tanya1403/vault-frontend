@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from './dashboard.component';
@@ -12,6 +12,7 @@ import { IntransitPageComponent } from './pages/intransit/intransit.component';
 import { DeliveredPageComponent } from './pages/delivered/delivered.component';
 import { VaultManagementPageComponent } from './pages/vault-management/vault-management.component';
 import { CancelledPickupPageComponent } from './pages/cancelled-pickup/cancelled-pickup.component';
+import { UserRegistrationPageComponent } from './pages/user-registration/user-registration.component';
 
 @NgModule({
   declarations: [
@@ -21,13 +22,15 @@ import { CancelledPickupPageComponent } from './pages/cancelled-pickup/cancelled
     IntransitPageComponent,
     DeliveredPageComponent,
     VaultManagementPageComponent,
-    CancelledPickupPageComponent
+    CancelledPickupPageComponent,
+    UserRegistrationPageComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
     DashboardRoutingModule,
-    SharedModule
+    SharedModule,
+    ReactiveFormsModule
   ]
 })
 export class DashboardModule { }

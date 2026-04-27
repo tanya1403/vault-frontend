@@ -74,19 +74,17 @@ export class VaultManagementService {
   }
 
   cancelPickup(recordId: string, reason: string): Observable<any> {
-    // Mocked for now as requested
-    console.log('Mocking cancellation for:', recordId, reason);
-    return new Observable(obs => {
-      setTimeout(() => {
-        obs.next({ isSuccess: true, message: `Pickup ${recordId} cancelled.` });
-        obs.complete();
-      }, 500);
-    });
+    const payload = {
+      recordId: recordId,
+      status: 'Cancelled',
+      remarks: reason
+    };
+    return this.api.post<any>('/update-pickup-date', payload);
   }
 
-  getCancelledPickups(): Observable<CursorResponse<CancelledPickup>> {
-    return this.api.get<CursorResponse<CancelledPickup>>('/vault/pickups/cancelled');
-  }
+  // getCancelledPickups(): Observable<CursorResponse<CancelledPickup>> {
+  //   return this.api.get<CursorResponse<CancelledPickup>>('/vault/pickups/cancelled');
+  // }
 
   markAsVaulted(documentId: string): Observable<any> {
     const body = {

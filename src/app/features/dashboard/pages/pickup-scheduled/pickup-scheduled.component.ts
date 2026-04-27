@@ -5,6 +5,8 @@ import { ToastService } from '../../../../shared/services/toast.service';
 import { UiStateService } from '../../../../core/services/ui-state.service';
 import { VaultManagementService } from '../../../../core/services/vault-management.service';
 import { PickupRequestKleeto } from '../../../../shared/models/models';
+import { AuthService } from '../../../../core/services/auth.service';
+import { computed } from '@angular/core';
 
 @Component({
   selector: 'app-pickup-scheduled-page',
@@ -17,9 +19,11 @@ export class PickupScheduledPageComponent implements OnInit {
   toast = inject(ToastService);
   ui = inject(UiStateService);
   vaultService = inject(VaultManagementService);
+  authService = inject(AuthService);
 
   loading = signal(true);
   error = signal('');
+  isDisabled = computed(() => this.authService.isCSM());
 
   // Modal State
   showModal = signal(false);
