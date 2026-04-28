@@ -6,13 +6,10 @@ import { Injectable, signal } from '@angular/core';
 export class UiStateService {
   pageTitle = signal('Dashboard');
   pageSubtitle = signal('');
-  breadcrumb = signal<string[]>(['Operations', 'Dashboard']);
+  breadcrumb = signal<string[]>(['Courier Services', 'Dashboard']);
 
-  setPageTitle(title: string, subtitle: string = '', breadcrumb: string[] = []) {
+  setPageTitle(title: string,) {
     this.pageTitle.set(title);
-    this.pageSubtitle.set(subtitle);
-    if (breadcrumb.length > 0) {
-      this.breadcrumb.set(breadcrumb);
-    }
+    
   }
 }

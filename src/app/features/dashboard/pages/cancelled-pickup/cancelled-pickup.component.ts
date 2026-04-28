@@ -18,9 +18,7 @@ export class CancelledPickupPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.ui.setPageTitle(
-      'Cancelled Pickups',
-      'History of pickup requests that were cancelled before completion',
-      ['Operations', 'Cancelled Pickup']
+      'Cancelled Pickups'
     );
     this.loadCancelledPickups();
   }

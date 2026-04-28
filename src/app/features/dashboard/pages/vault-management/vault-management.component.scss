@@ -7,11 +7,30 @@
 .badge {
   display: inline-flex;
   align-items: center;
-  padding: 4px 10px;
-  border-radius: 6px;
+  padding: 4px 12px;
+  border-radius: 999px; /* Pill shape */
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+.badge-Physical, .badge-Original, .badge-physical, .badge-original {
+  background-color: #f5f5f4 !important;
+  color: #57534e !important;
+  border: 1px solid #e7e5e4 !important;
+}
+
+.badge-Certified, .badge-certified {
+  background-color: #eff6ff !important;
+  color: #1e40af !important;
+  border: 1px solid #bfdbfe !important;
+}
+
+.badge-Photocopy, .badge-photocopy {
+  background-color: #fffbeb !important;
+  color: #b45309 !important;
+  border: 1px solid #fef3c7 !important;
 }
 
 .badge-acked {
@@ -339,9 +358,9 @@
   border: 1px solid #f1f5f9;
 
   .modal-header {
-    padding: 24px 24px 16px;
+    padding: 20px 24px;
     display: flex;
-    gap: 16px;
+    gap: 12px;
     align-items: center;
     border-bottom: 1px solid #f1f5f9;
 
@@ -366,7 +385,7 @@
       font-size: 18px;
       font-weight: 700;
       color: #0f172a;
-      margin-bottom: 4px;
+      margin: 0;
     }
 
     .modal-subtitle {
@@ -426,7 +445,6 @@
         font-size: 13px;
         font-weight: 600;
         color: #334155;
-        font-family: mono;
         display: flex;
         align-items: center;
         gap: 10px;

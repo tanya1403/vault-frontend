@@ -33,8 +33,6 @@ export class RequestForPickupPageComponent implements OnInit {
   ngOnInit(): void {
     this.ui.setPageTitle(
       'Request for Pickup',
-      'Incoming pickup requests from HomeFirst — confirm to schedule',
-      ['Operations', 'Request for Pickup']
     );
     this.fetchData();
   }
