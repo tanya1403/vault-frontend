@@ -36,9 +36,7 @@ export class PickupScheduledPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.ui.setPageTitle(
-      'Pickup Scheduled',
-      'Pickups confirmed and scheduled for collection',
-      ['Operations', 'Pickup Scheduled']
+      'Pickup Scheduled'
     );
     this.fetchData();
   }

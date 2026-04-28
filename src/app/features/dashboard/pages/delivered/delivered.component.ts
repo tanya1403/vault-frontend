@@ -19,9 +19,7 @@ export class DeliveredPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.ui.setPageTitle(
-      'Delivered',
-      'Shipments acknowledged and delivered to the vault',
-      ['Operations', 'Delivered']
+      'Delivered'
     );
     this.fetchData();
   }

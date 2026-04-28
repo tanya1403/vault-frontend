@@ -76,7 +76,7 @@ export class VaultManagementPageComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.ui.setPageTitle('Vault Management', 'Manage branches and document vaulting', ['Operations', 'Vault Management']);
+    this.ui.setPageTitle('Vault Management');
     this.loadBranches();
     
     this.searchSub = this.searchSubject.pipe(

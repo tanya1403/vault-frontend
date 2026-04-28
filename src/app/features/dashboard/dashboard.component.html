@@ -30,7 +30,7 @@
     </div>
 
     <nav class="sidebar-nav">
-      <div class="nav-section-label">OPERATIONS</div>
+      <div class="nav-section-label">COURIER SERVICES</div>
       <ul class="nav-links">
         <li class="nav-link" routerLink="request-for-pickup" routerLinkActive="active"
           (click)="onNavClick('request-for-pickup')">
@@ -74,6 +74,10 @@
           </svg>
           <span>Cancelled Pickup</span>
         </li>
+      </ul>
+
+      <div class="nav-section-label">VAULTING</div>
+      <ul class="nav-links">
         <li class="nav-link"
             routerLink="vault-management"
             routerLinkActive="active"
@@ -84,6 +88,7 @@
             <rect x="3" y="3" width="18" height="18" rx="2" />
             <polyline points="9 12 11 14 15 10" />
           </svg>
+
           <span>Vault Management</span>
         </li>
         <li class="nav-link" routerLink="user-registration" routerLinkActive="active" *ngIf="isAdminFlag">

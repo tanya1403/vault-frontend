@@ -67,9 +67,9 @@ export class VaultManagementService {
     return this.api.get<CursorResponse<VaultLai>>('/lais', params);
   }
 
-  getDocuments(lai: string, lastCreatedDate?: string): Observable<CursorResponse<VaultDocument>> {
+  getDocuments(lai: string, lastId?: string): Observable<CursorResponse<VaultDocument>> {
     let params = new HttpParams().set('lai', lai);
-    if (lastCreatedDate) params = params.set('lastCreatedDate', lastCreatedDate);
+    if (lastId) params = params.set('lastId', lastId);
     return this.api.get<CursorResponse<VaultDocument>>('/documents', params);
   }
 
