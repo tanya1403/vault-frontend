@@ -7,6 +7,8 @@ import { IntransitPageComponent } from './pages/intransit/intransit.component';
 import { DeliveredPageComponent } from './pages/delivered/delivered.component';
 import { VaultManagementPageComponent } from './pages/vault-management/vault-management.component';
 import { CancelledPickupPageComponent } from './pages/cancelled-pickup/cancelled-pickup.component';
+import { UserRegistrationPageComponent } from './pages/user-registration/user-registration.component';
+import { RoleGuard } from '@core/guards/role.guard';
 
 const routes: Routes = [
   {
@@ -18,8 +20,9 @@ const routes: Routes = [
       { path: 'pickup-scheduled', component: PickupScheduledPageComponent },
       { path: 'intransit', component: IntransitPageComponent },
       { path: 'delivered', component: DeliveredPageComponent },
-      { path: 'vault-management', component: VaultManagementPageComponent },
+      { path: 'vault-management', component: VaultManagementPageComponent, canActivate: [RoleGuard], data: { role: ['ADMIN', 'MANAGEMENT', 'KLEETO'] } },
       { path: 'cancelled-pickup', component: CancelledPickupPageComponent },
+      { path: 'user-registration', component: UserRegistrationPageComponent, canActivate: [RoleGuard], data: { role: ['ADMIN'] } },
     ]
   }
 ];

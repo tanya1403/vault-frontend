@@ -12,6 +12,7 @@ export class DataService {
     scheduled: 0,
     intransit: 0,
     delivered: 0,
+    cancelled: 0,
     totalFiles: 0
   });
 
@@ -20,7 +21,8 @@ export class DataService {
   countScheduled = computed(() => this.dashboardStats().scheduled);
   countIntransit = computed(() => this.dashboardStats().intransit);
   countDelivered = computed(() => this.dashboardStats().delivered);
-  
+  countCancelled = computed(() => this.dashboardStats().cancelled);
+
   totalFilesPending = computed(() => this.dashboardStats().totalFiles);
 
   updateCounts(stats: Partial<typeof this.dashboardStats.prototype>) {

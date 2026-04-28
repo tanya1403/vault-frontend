@@ -69,9 +69,9 @@ body {
 /* Stat Cards */
 .stat-row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--sp-3);
-  /* 24px gap */
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--sp-2);
+  /* Smaller gap for 5 cards */
   margin-bottom: var(--sp-4);
 }
 
@@ -231,6 +231,19 @@ body {
   font-size: 14px;
   font-weight: 600;
   color: #475569;
+}
+
+.view-only-tag {
+  display: inline-flex;
+  background: #f1f5f9;
+  color: #64748b;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid #e2e8f0;
 }
 
 /* Buttons */

@@ -26,10 +26,44 @@ export class AuthService {
           if (refreshToken) {
             localStorage.setItem('refresh-token', refreshToken);
           }
+          if (response.data?.user || response.user) {
+            localStorage.setItem('user-data', JSON.stringify(response.data?.user || response.user));
+          }
           this.isAuthenticatedSubject.next(true);
         }
       })
     );
+  }
+
+  getCurrentUser() {
+    const data = localStorage.getItem('user-data');
+    return data ? JSON.parse(data) : null;
+  }
+
+  hasRole(role: string): boolean {
+    const user = this.getCurrentUser();
+    if (!user || !user.roles) return false;
+    return user.roles.some((r: string) => r.toUpperCase() === role.toUpperCase());
+  }
+
+  isCSM(): boolean {
+    return this.hasRole('CSM');
+  }
+
+  isAdmin(): boolean {
+    return this.hasRole('ADMIN');
+  }
+
+  isManagement(): boolean {
+    return this.hasRole('MANAGEMENT');
+  }
+
+  isKleeto(): boolean {
+    return this.hasRole('KLEETO');
+  }
+
+  register(userData: { username: string; password: string; fullName: string; role: string }): Observable<any> {
+    return this.apiService.post<any>('/register', userData);
   }
 
   refreshToken(): Observable<any> {
@@ -58,6 +92,7 @@ export class AuthService {
   private clearSession(): void {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem('refresh-token');
+    localStorage.removeItem('user-data');
     this.isAuthenticatedSubject.next(false);
     this.router.navigate(['/login']);
   }

@@ -1,76 +1,103 @@
 <div class="page-container" *ngIf="!loading(); else loader">
 
   <div class="page-fixed-top">
-    <!-- Stat Cards Row -->
+    <!-- Stat Cards Row (5 Stages) -->
     <div class="stat-row">
-      <!-- New Requests -->
+      <!-- 1. Pickup Requested -->
       <div class="stat-card-val" [routerLink]="['/dashboard', 'request-for-pickup']">
         <div class="d-flex align-items-start">
-          <div class="stat-icon-tile" style="background: var(--amber-bg); color: #854F0B;">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-            </svg>
-          </div>
-          <div class="stat-trend-pill" style="background: var(--amber-bg); color: var(--amber-text);">
-            +{{ data.countPending() }} new
-          </div>
-        </div>
-        <div class="stat-micro-label"
-          style="font-size: 11px; font-weight: 500; color: var(--amber-brand); letter-spacing: 0.05em; margin-bottom: 8px;">
-          NEW REQUESTS</div>
-        <div class="stat-main-number" style="font-size: 32px; font-weight: 600; margin-bottom: 8px;">{{
-          data.countPending() }}</div>
-        <div class="progress-track">
-          <div class="progress-fill" style="width: 100%; background: var(--amber-brand);"></div>
-        </div>
-      </div>
-
-      <!-- Scheduled Today -->
-      <div class="stat-card-val" [routerLink]="['/dashboard', 'pickup-scheduled']">
-        <div class="d-flex align-items-start">
-          <div class="stat-icon-tile" style="background: var(--teal-bg); color: #0F6E56;">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="20 6 9 17 4 12" />
-            </svg>
-          </div>
-          <div class="stat-trend-pill" style="background: var(--teal-bg); color: var(--teal-text);">Confirmed</div>
-        </div>
-        <div class="stat-micro-label"
-          style="font-size: 11px; font-weight: 500; color: var(--teal-brand); letter-spacing: 0.05em; margin-bottom: 8px;">
-          SCHEDULED TODAY</div>
-        <div class="stat-main-number" style="font-size: 32px; font-weight: 600; margin-bottom: 8px;">{{
-          data.countScheduled() }}</div>
-        <div class="progress-track">
-          <div class="progress-fill" [style.width.%]="data.countScheduled() > 0 ? 100 : 0"
-            style="background: var(--teal-brand);"></div>
-        </div>
-      </div>
-
-      <!-- Total Files -->
-      <div class="stat-card-val" [routerLink]="['/dashboard', 'request-for-pickup']">
-        <div class="d-flex align-items-start">
-          <div class="stat-icon-tile" style="background: var(--blue-light); color: var(--blue-brand);">
+          <div class="stat-icon-tile" style="background: var(--amber-bg); color: var(--amber-brand);">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
               <polyline points="14 2 14 8 20 8" />
             </svg>
           </div>
-          <div class="stat-trend-pill" style="background: var(--blue-light); color: var(--blue-brand);">Pending</div>
+          <div class="stat-trend-pill" style="background: var(--amber-bg); color: var(--amber-text);">New</div>
         </div>
         <div class="stat-micro-label"
-          style="font-size: 11px; font-weight: 500; color: var(--blue-brand); letter-spacing: 0.05em; margin-bottom: 8px;">
-          TOTAL FILES</div>
-        <div class="stat-main-number" style="font-size: 32px; font-weight: 600; margin-bottom: 8px;">{{
-          data.totalFilesPending() }}</div>
-        <div class="progress-track">
-          <div class="progress-fill" [style.width.%]="data.totalFilesPending() > 0 ? 30 : 0"
-            style="background: var(--blue-brand);"></div>
+             style="font-size: 10px; font-weight: 600; color: var(--amber-brand); letter-spacing: 0.05em; margin-bottom: 4px;">
+          REQUESTED</div>
+        <div class="stat-main-number" style="font-size: 24px; font-weight: 600;">{{ data.countPending() }}</div>
+      </div>
+
+      <!-- 2. Pickup Scheduled -->
+      <div class="stat-card-val" [routerLink]="['/dashboard', 'pickup-scheduled']">
+        <div class="d-flex align-items-start">
+          <div class="stat-icon-tile" style="background: var(--blue-light); color: var(--blue-brand);">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" />
+            </svg>
+          </div>
+          <div class="stat-trend-pill" style="background: var(--blue-light); color: var(--blue-brand);">Planned</div>
         </div>
+        <div class="stat-micro-label"
+             style="font-size: 10px; font-weight: 600; color: var(--blue-brand); letter-spacing: 0.05em; margin-bottom: 4px;">
+          SCHEDULED</div>
+        <div class="stat-main-number" style="font-size: 24px; font-weight: 600;">{{ data.countScheduled() }}</div>
+      </div>
+
+      <!-- 3. In Transit -->
+      <div class="stat-card-val" [routerLink]="['/dashboard', 'intransit']">
+        <div class="d-flex align-items-start">
+          <div class="stat-icon-tile" style="background: var(--purple-bg); color: var(--purple-brand);">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="1" y="3" width="15" height="13" />
+              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+              <circle cx="5.5" cy="18.5" r="2.5" />
+              <circle cx="18.5" cy="18.5" r="2.5" />
+            </svg>
+          </div>
+          <div class="stat-trend-pill" style="background: var(--purple-bg); color: var(--purple-brand);">Moving</div>
+        </div>
+        <div class="stat-micro-label"
+             style="font-size: 10px; font-weight: 600; color: var(--purple-brand); letter-spacing: 0.05em; margin-bottom: 4px;">
+          IN TRANSIT</div>
+        <div class="stat-main-number" style="font-size: 24px; font-weight: 600;">{{ data.countIntransit() }}</div>
+      </div>
+
+      <!-- 4. Delivered -->
+      <div class="stat-card-val" [routerLink]="['/dashboard', 'delivered']">
+        <div class="d-flex align-items-start">
+          <div class="stat-icon-tile" style="background: var(--teal-bg); color: var(--teal-brand);">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+              <polyline points="22 4 12 14.01 9 11.01" />
+            </svg>
+          </div>
+          <div class="stat-trend-pill" style="background: var(--teal-bg); color: var(--teal-brand);">Success</div>
+        </div>
+        <div class="stat-micro-label"
+             style="font-size: 10px; font-weight: 600; color: var(--teal-brand); letter-spacing: 0.05em; margin-bottom: 4px;">
+          DELIVERED</div>
+        <div class="stat-main-number" style="font-size: 24px; font-weight: 600;">{{ data.countDelivered() }}</div>
+      </div>
+
+      <!-- 5. Cancelled -->
+      <div class="stat-card-val" [routerLink]="['/dashboard', 'cancelled-pickup']">
+        <div class="d-flex align-items-start">
+          <div class="stat-icon-tile" style="background: #fef2f2; color: #dc2626;">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="15" y1="9" x2="9" y2="15" />
+              <line x1="9" y1="9" x2="15" y2="15" />
+            </svg>
+          </div>
+          <div class="stat-trend-pill" style="background: #fef2f2; color: #dc2626;">Stopped</div>
+        </div>
+        <div class="stat-micro-label"
+             style="font-size: 10px; font-weight: 600; color: #dc2626; letter-spacing: 0.05em; margin-bottom: 4px;">
+          CANCELLED</div>
+        <div class="stat-main-number" style="font-size: 24px; font-weight: 600;">{{ data.countCancelled() }}</div>
       </div>
     </div>
 
     <div class="header-stack mb-4" style="margin-top: var(--sp-6);">
       <h2 style="font-size: 24px; font-weight: 600; margin: 0 0 12px; color: var(--navy);">Incoming Pickup Requests</h2>
+      <p style="font-size: 14px; color: var(--gray-tertiary); margin: 0 0 0;">From HomeFirst branches — awaiting Kleeto
+        confirmation</p>
     </div>
 
     <!-- Re-introduced Status Banner (Properly Indented) -->
@@ -83,6 +110,51 @@
       <span>You have <strong>{{ data.countPending() }}</strong> pending pickup requests awaiting your
         confirmation.</span>
     </div>
+
+    <!-- Reactive Filter Bar -->
+    <div class="filter-bar-container" style="margin-top: var(--sp-4); margin-bottom: var(--sp-2);">
+      <div class="filter-row"
+           style="display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1px solid var(--gray-border); border-radius: 12px; padding: 4px 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+        <div class="search-group" style="display: flex; align-items: center; gap: 12px; flex: 1;">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--gray-tertiary)" stroke-width="2">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input type="text" placeholder="Search by Branch, CSM or Address..." [value]="searchTerm()"
+                 (input)="searchTerm.set($any($event.target).value)"
+                 style="width: 100%; border: none; outline: none; background: transparent; font-size: 14px; padding: 10px 0; color: var(--navy);">
+        </div>
+
+        <div class="filter-actions"
+             style="display: flex; gap: 20px; align-items: center; border-left: 1px solid var(--gray-border); padding-left: 20px; margin-left: 20px;">
+          <div class="date-filter" style="display: flex; align-items: center; gap: 10px;">
+            <span class="filter-label"
+                  style="font-size: 11px; font-weight: 700; color: var(--gray-tertiary); text-transform: uppercase; letter-spacing: 0.05em;">Filter
+              by Date</span>
+            <input type="date" [value]="dateFilter()" (input)="dateFilter.set($any($event.target).value)"
+                   style="border: 1px solid var(--gray-border); border-radius: 8px; padding: 6px 10px; font-size: 13px; color: var(--navy); cursor: pointer;">
+          </div>
+
+          <button class="btn-refresh" (click)="fetchData()" [class.spinning]="loading()"
+                  style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: var(--bg-main); border: 1px solid var(--gray-border); border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; color: var(--navy);">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="23 4 23 10 17 10" />
+              <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+            </svg>
+            Refresh
+          </button>
+
+          <button class="btn-outline" (click)="clearFilters()"
+                  style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--gray-tertiary); background: #fff;">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+            Clear
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Premium Table Scroll Area -->
@@ -90,71 +162,72 @@
     <div class="table-container-premium">
       <table class="table-premium">
         <thead>
-          <tr>
-            <th style="width: 12%;">Branch</th>
-            <th style="width: 20%;">Address</th>
-            <th style="width: 12%;">CSM / BM</th>
-            <th style="width: 10%;">Mobile</th>
-            <th class="text-end" style="width: 7%;">Files</th>
-            <th class="text-end" style="width: 7%;">Boxes</th>
-            <th style="width: 12%;">Pickup Date</th>
-            <th style="width: 10%;">Status</th>
-            <th class="text-center" style="width: 10%;">Action</th>
-          </tr>
+        <tr>
+          <th style="width: 10%;">Branch</th>
+          <th style="width: 16%;">Address</th>
+          <th style="width: 12%;">CSM / BM</th>
+          <th style="width: 10%;">Mobile</th>
+          <th class="text-end" style="width: 7%;">Files</th>
+          <th class="text-end" style="width: 7%;">Boxes</th>
+          <th style="width: 12%;">Pickup Date</th>
+          <!-- <th style="width: 10%;">Status</th> -->
+          <th class="text-center" style="width: 15%;">Action</th>
+        </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let r of data.kleetoRequests()">
-            <td>
-              <div class="chip-branch">
-                <svg viewBox="0 0 24 24" width="10" height="10" fill="var(--navy)">
-                  <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+        <tr *ngFor="let r of filteredPickups()">
+          <td>
+            <div class="chip-branch">
+              <svg viewBox="0 0 24 24" width="10" height="10" fill="var(--navy)">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+              </svg>
+              {{ r.branch }}
+            </div>
+          </td>
+          <td>
+            <div style="font-size: 14px; max-width: 180px; line-height: 1.4;">
+              {{ r.addr }}
+            </div>
+          </td>
+          <td>
+            <span>{{ r.ownerName || 'Smit Dama' }}</span>
+          </td>
+          <td class="mono">{{ r.mob || '—' }}</td>
+          <td class="text-end">
+            <div class="count-chip">{{ r.files }}</div>
+          </td>
+          <td class="text-end">
+            <div class="count-chip">{{ r.boxes }}</div>
+          </td>
+          <td class="mono" style="font-size: 14px;">{{ r.date || '—' }}</td>
+          <!-- <td>
+            <div class="badge-status" style="color: var(--amber-text);">
+              <span class="dot-status" style="background: var(--amber-brand);"></span>
+              Pending
+            </div>
+          </td> -->
+          <td class="action-cell text-center">
+            <div class="action-gap" *ngIf="!isDisabled()"
+                 style="display: flex; gap: 8px; justify-content: center; align-items: center;">
+              <button class="btn-solid-blue" (click)="openConfirmModal(r)"
+                      style="padding-left: 14px; padding-right: 14px; height: 36px; font-size: 13px; white-space: nowrap;">
+                Schedule Pickup
+              </button>
+              <button class="btn-danger-outline" (click)="openCancelModal(r)" title="Cancel Pickup"
+                      style="border: 1px solid #fee2e2; background: #fff; color: #ef4444; width: 36px; height: 36px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
                 </svg>
-                {{ r.branch }}
-              </div>
-            </td>
-            <td>
-              <div style="font-size: 14px; max-width: 180px; line-height: 1.4;">
-                {{ r.addr }}
-              </div>
-            </td>
-            <td>
-              <span>{{ r.ownerName || 'Smit Dama' }}</span>
-            </td>
-            <td class="mono" style="color: var(--gray-secondary);">{{ r.mob || '—' }}</td>
-            <td class="text-end">
-              <div class="count-chip">{{ r.files }}</div>
-            </td>
-            <td class="text-end">
-              <div class="count-chip">{{ r.boxes }}</div>
-            </td>
-            <td class="mono" style="font-size: 14px;">{{ r.date || '—' }}</td>
-            <td>
-              <div class="badge-status" style="color: var(--amber-text);">
-                <span class="dot-status" style="background: var(--amber-brand);"></span>
-                Pending
-              </div>
-            </td>
-            <td class="text-center">
-              <div style="display: flex; gap: 8px; justify-content: center;">
-                <button class="btn-solid-blue" (click)="openConfirmModal(r)" style="padding-left: 12px; padding-right: 12px;">
-                  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                  Confirm
-                </button>
-                <button class="btn-danger-outline" (click)="openCancelModal(r)" title="Cancel Pickup" style="border: 1px solid #fee2e2; background: #fff; color: #ef4444; padding: 6px 10px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">
-                  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                  </svg>
-                </button>
-              </div>
-            </td>
-          </tr>
+              </button>
+            </div>
+            <span class="view-only-tag" *ngIf="isDisabled()">View Only</span>
+          </td>
+        </tr>
         </tbody>
       </table>
-      <div class="no-data" *ngIf="data.countPending() === 0">
-        No pending pickup requests.
+      <div class="no-data" *ngIf="!loading() && filteredPickups().length === 0">
+        No pickup requests found matching your filters.
       </div>
     </div>
   </div>
@@ -163,7 +236,7 @@
   <div class="modal-overlay" *ngIf="showModal()" (click)="closeModal()">
     <div class="modal-box" (click)="$event.stopPropagation()">
       <div class="modal-header">
-        <span class="modal-title">Confirm Pickup Request</span>
+        <span class="modal-title">Schedule Pickup Request</span>
         <button class="btn-logout" (click)="closeModal()">×</button>
       </div>
       <div class="modal-body">
@@ -181,19 +254,41 @@
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
           <div class="form-group">
             <label
-              style="display: block; font-size: 14px; font-weight: 600; color: var(--gray-tertiary); margin-bottom: 6px;">Expected
+                    style="display: block; font-size: 14px; font-weight: 600; color: var(--gray-tertiary); margin-bottom: 6px;">Expected
               Pickup Date</label>
             <input type="date" class="form-control"
-              style="width: 100%; border: var(--hairline); border-radius: 8px; padding: 8px 10px; font-size: 12px;"
-              [ngModel]="confirmDate()" (ngModelChange)="confirmDate.set($event)" />
+                   style="width: 100%; border: var(--hairline); border-radius: 8px; padding: 8px 10px; font-size: 12px;"
+                   [ngModel]="confirmDate()" (ngModelChange)="confirmDate.set($event)" />
           </div>
           <div class="form-group">
             <label
-              style="display: block; font-size: 14px; font-weight: 600; color: var(--gray-tertiary); margin-bottom: 6px;">POD
+                    style="display: block; font-size: 14px; font-weight: 600; color: var(--gray-tertiary); margin-bottom: 6px;">POD
               / Consignment ID</label>
             <input type="text" placeholder="Enter ID" class="form-control"
-              style="width: 100%; border: var(--hairline); border-radius: 8px; padding: 8px 10px; font-size: 12px;"
-              [ngModel]="confirmPOD()" (ngModelChange)="confirmPOD.set($event)" />
+                   style="width: 100%; border: var(--hairline); border-radius: 8px; padding: 8px 10px; font-size: 12px;"
+                   [ngModel]="confirmPOD()" (ngModelChange)="confirmPOD.set($event)" />
+          </div>
+          <div class="form-group" style="grid-column: span 2; margin-top: 4px;">
+            <label
+                    style="display: block; font-size: 14px; font-weight: 600; color: var(--gray-tertiary); margin-bottom: 6px;">Upload
+              Document (PDF/Image)</label>
+            <div
+                    style="display: flex; align-items: center; gap: 12px; border: var(--hairline); border-radius: 8px; padding: 6px 10px; background: #fff;">
+              <input type="file" (change)="onFileSelected($event)" accept="image/*,.pdf" style="display: none;"
+                     #fileInput />
+              <button type="button" class="btn-outline" (click)="fileInput.click()"
+                      style="padding: 4px 12px; font-size: 11px; border: 1px solid var(--gray-border); border-radius: 4px; background: var(--bg-main); color: var(--navy); cursor: pointer;">
+                Choose File
+              </button>
+              <span
+                      style="font-size: 12px; color: var(--gray-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;">
+                {{ selectedFile() ? selectedFile()?.name : 'No file selected' }}
+              </span>
+              <button type="button" *ngIf="selectedFile()" (click)="selectedFile.set(null); fileInput.value = ''"
+                      style="background: transparent; border: none; color: #dc2626; font-size: 16px; cursor: pointer; padding: 0 4px;">
+                ×
+              </button>
+            </div>
           </div>
         </div>
         <div style="color: #dc2626; font-size: 14px; margin-top: 10px;" *ngIf="formError()">All fields are required.
@@ -217,21 +312,28 @@
         <button class="btn-logout" (click)="closeCancelModal()">×</button>
       </div>
       <div class="modal-body">
-        <div style="background: #fef2f2; padding: 12px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #fee2e2;">
-          <div style="font-size: 10px; color: #991b1b; font-weight: 600; text-transform: uppercase;">You are cancelling</div>
-          <div style="font-size: 14px; font-weight: 600; color: #7f1d1d; margin-top: 4px;">{{ selectedRequest()?.branch }}</div>
-          <div style="font-size: 11px; color: #991b1b; margin-top: 2px;">{{ selectedRequest()?.files }} files · Requested: {{ selectedRequest()?.date }}</div>
+        <div
+                style="background: #fef2f2; padding: 12px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #fee2e2;">
+          <div style="font-size: 10px; color: #991b1b; font-weight: 600; text-transform: uppercase;">You are cancelling
+          </div>
+          <div style="font-size: 14px; font-weight: 600; color: #7f1d1d; margin-top: 4px;">{{ selectedRequest()?.branch
+            }}</div>
+          <div style="font-size: 11px; color: #991b1b; margin-top: 2px;">{{ selectedRequest()?.files }} files ·
+            Requested: {{ selectedRequest()?.date }}</div>
         </div>
 
         <div class="form-group">
-          <label style="display: block; font-size: 13px; font-weight: 600; color: var(--gray-tertiary); margin-bottom: 6px;">Reason for Cancellation</label>
+          <label
+                  style="display: block; font-size: 13px; font-weight: 600; color: var(--gray-tertiary); margin-bottom: 6px;">Reason
+            for Cancellation</label>
           <textarea class="form-control" rows="3" placeholder="Explain why this pickup is being cancelled..."
-            style="width: 100%; border: var(--hairline); border-radius: 8px; padding: 8px 10px; font-size: 13px; resize: none;"
-            [ngModel]="cancelReason()" (ngModelChange)="cancelReason.set($event)"></textarea>
+                    style="width: 100%; border: var(--hairline); border-radius: 8px; padding: 8px 10px; font-size: 13px; resize: none;"
+                    [ngModel]="cancelReason()" (ngModelChange)="cancelReason.set($event)"></textarea>
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn-logout" style="padding: 6px 16px; font-size: 12px;" (click)="closeCancelModal()">Go Back</button>
+        <button class="btn-logout" style="padding: 6px 16px; font-size: 12px;" (click)="closeCancelModal()">Go
+          Back</button>
         <button class="btn-solid-blue" style="background: #dc2626; border-color: #dc2626;" (click)="submitCancel()">
           Confirm Cancellation
         </button>
