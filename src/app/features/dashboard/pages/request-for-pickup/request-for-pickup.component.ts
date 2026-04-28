@@ -165,7 +165,7 @@ export class RequestForPickupPageComponent implements OnInit {
   }
 
   submitConfirm(): void {
-    if (!this.confirmDate() || !this.confirmPOD().trim()) {
+    if (!this.confirmDate() || !this.confirmPOD().trim() || !this.selectedFile()) {
       this.formError.set(true);
       return;
     }

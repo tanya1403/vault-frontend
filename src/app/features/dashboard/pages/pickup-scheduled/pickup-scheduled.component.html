@@ -100,13 +100,14 @@
       <table class="table-premium">
         <thead>
           <tr>
-            <th style="width: 15%;">Branch</th>
-            <th style="width: 25%;">Address</th>
-            <th style="width: 15%;">CSM / BM</th>
-            <th class="text-end" style="width: 10%;">Files</th>
-            <th class="text-end" style="width: 10%;">Boxes</th>
-            <th style="width: 15%;">Scheduled Date</th>
-            <th class="text-center" style="width: 10%;">Action</th>
+            <th style="width: 12%;">Branch</th>
+            <th style="width: 20%;">Address</th>
+            <th style="width: 14%;">CSM / BM</th>
+            <th style="width: 10%;">Mobile</th>
+            <th class="text-end" style="width: 8%;">Files</th>
+            <th class="text-end" style="width: 8%;">Boxes</th>
+            <th style="width: 14%;">Scheduled Date</th>
+            <th class="text-center" style="width: 14%;">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -126,6 +127,7 @@
             <td>
               <span>{{ r.ownerName }}</span>
             </td>
+            <td class="mono">{{ r.mob || '—' }}</td>
 
 
             <td class="text-end">
@@ -138,11 +140,8 @@
 
             <td class="text-center">
               <div style="display: flex; gap: 8px; justify-content: center;" *ngIf="!isDisabled()">
-                <button class="btn-solid-blue" (click)="markIntransit(r)" style="padding-left: 10px; padding-right: 10px;">
-                  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3">
-                    <path d="M1 3h15v13H1z" /><path d="M16 8h4l3 3v5h-7z" /><circle cx="5.5" cy="18.5" r="2.5" /><circle cx="18.5" cy="18.5" r="2.5" />
-                  </svg>
-                  <!-- InTransit -->Confirm Pickup
+                <button class="btn-solid-blue" (click)="markIntransit(r)" style="padding-left: 10px; padding-right: 10px; white-space: nowrap;">
+                  Confirm Pickup
                 </button>
                 <button class="btn-danger-outline" (click)="openCancelModal(r)" title="Cancel Scheduled Pickup" style="border: 1px solid #fee2e2; background: #fff; color: #ef4444; padding: 6px 10px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">
                   <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3">

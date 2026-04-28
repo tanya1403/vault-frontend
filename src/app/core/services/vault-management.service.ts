@@ -74,23 +74,27 @@ export class VaultManagementService {
   }
 
   cancelPickup(recordId: string, reason: string): Observable<any> {
-    const payload = {
-      recordId: recordId,
-      status: 'Cancelled',
-      remarks: reason
-    };
-    return this.api.post<any>('/update-pickup-date', payload);
+    const formData = new FormData();
+    formData.append('recordId', recordId);
+    formData.append('status', 'Cancelled');
+    formData.append('remarks', reason);
+    return this.api.post<any>('/update-pickup-date', formData);
   }
 
   // getCancelledPickups(): Observable<CursorResponse<CancelledPickup>> {
   //   return this.api.get<CursorResponse<CancelledPickup>>('/vault/pickups/cancelled');
   // }
 
-  markAsVaulted(documentId: string): Observable<any> {
+  markAsVaulted(documentIds: string[], vaultingDate: string): Observable<any> {
     const body = {
-      documentId: documentId
+      documentIds: documentIds,
+      vaultingDate: vaultingDate
     };
 
     return this.api.post<any>(`/vault/document/mark-vaulted`, body);
+  }
+
+  acknowledgeLais(lais: string[]): Observable<any> {
+    return this.api.post<any>(`/vault/lai/acknowledge`, { lais });
   }
 }

@@ -4,7 +4,10 @@
     <div class="card-header-premium">
       <div class="header-icon-box">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/>
+          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="8.5" cy="7" r="4" />
+          <line x1="20" y1="8" x2="20" y2="14" />
+          <line x1="23" y1="11" x2="17" y2="11" />
         </svg>
       </div>
       <div class="header-text">
@@ -27,7 +30,8 @@
             <div class="premium-input-wrapper">
               <span class="inset-icon">
                 <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
                 </svg>
               </span>
               <input type="text" formControlName="fullName" placeholder="e.g. Johnathan Smith">
@@ -39,7 +43,7 @@
             <div class="premium-input-wrapper">
               <span class="inset-icon">
                 <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                 </svg>
               </span>
               <select formControlName="role">
@@ -55,12 +59,15 @@
             <div class="role-info-panel">
               <div class="role-header">
                 <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#185FA5" stroke-width="2.5">
-                  <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="16" x2="12" y2="12" />
+                  <line x1="12" y1="8" x2="12.01" y2="8" />
                 </svg>
                 <p class="role-desc">{{ currentRoleInfo().desc }}</p>
               </div>
               <div class="access-chips">
-                <span class="access-chip" *ngFor="let chip of currentRoleInfo().chips" [class.ok]="chip.ok" [class.no]="!chip.ok">
+                <span class="access-chip" *ngFor="let chip of currentRoleInfo().chips" [class.ok]="chip.ok"
+                  [class.no]="!chip.ok">
                   {{ chip.label }}
                 </span>
               </div>
@@ -76,7 +83,8 @@
             <div class="premium-input-wrapper">
               <span class="inset-icon">
                 <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                  <polyline points="22,6 12,13 2,6" />
                 </svg>
               </span>
               <input type="text" formControlName="username" placeholder="admin">
@@ -88,20 +96,26 @@
             <div class="premium-input-wrapper">
               <span class="inset-icon">
                 <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                 </svg>
               </span>
               <input [type]="showPassword() ? 'text' : 'password'" formControlName="password" placeholder="••••••••">
               <button type="button" class="eye-toggle-premium" (click)="togglePassword()">
-                <svg *ngIf="!showPassword()" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                <svg *ngIf="!showPassword()" viewBox="0 0 24 24" width="16" height="16" fill="none"
+                  stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
                 </svg>
-                <svg *ngIf="showPassword()" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>
+                <svg *ngIf="showPassword()" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor"
+                  stroke-width="2">
+                  <path
+                    d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                  <line x1="1" y1="1" x2="23" y2="23" />
                 </svg>
               </button>
             </div>
-            
+
             <!-- Password Strength Bar -->
             <div class="pwd-strength-row">
               <div class="strength-track">
@@ -116,16 +130,22 @@
         <div class="form-footer-premium">
           <div class="audit-notice">
             <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5">
-              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
             </svg>
             Account creation will be logged for audit purposes
           </div>
           <div class="footer-actions">
-            <button type="button" class="btn-cancel" (click)="registerForm.reset({role: 'CSM', username: 'admin'})">Cancel</button>
+            <button type="button" class="btn-cancel"
+              (click)="registerForm.reset({role: 'CSM', username: 'admin'})">Cancel</button>
             <button type="submit" class="btn-create-account" [disabled]="registerForm.invalid || loading()">
               <span *ngIf="loading()" class="btn-spinner"></span>
-              <svg *ngIf="!loading()" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/>
+              <svg *ngIf="!loading()" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor"
+                stroke-width="2.5">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="8.5" cy="7" r="4" />
+                <line x1="20" y1="8" x2="20" y2="14" />
+                <line x1="23" y1="11" x2="17" y2="11" />
               </svg>
               {{ loading() ? 'Creating...' : 'Create team account' }}
             </button>

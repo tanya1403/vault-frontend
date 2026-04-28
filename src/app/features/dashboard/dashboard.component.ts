@@ -39,6 +39,10 @@ export class DashboardComponent implements OnInit {
     public router: Router
   ) { }
 
+  get shouldShowTopBar(): boolean {
+    return !this.router.url.includes('vault-management');
+  }
+
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
     this.checkRoles();
