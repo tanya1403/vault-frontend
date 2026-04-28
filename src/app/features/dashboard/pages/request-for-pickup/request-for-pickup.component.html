@@ -12,11 +12,11 @@
               <polyline points="14 2 14 8 20 8" />
             </svg>
           </div>
-          <div class="stat-trend-pill" style="background: var(--amber-bg); color: var(--amber-text);">New</div>
+          <div class="stat-trend-pill" style="background: var(--amber-bg); color: var(--amber-text);">Pickup</div>
         </div>
         <div class="stat-micro-label"
           style="font-size: 10px; font-weight: 600; color: var(--amber-brand); letter-spacing: 0.05em; margin-bottom: 4px;">
-          REQUESTED</div>
+          REQUEST</div>
         <div class="stat-main-number" style="font-size: 24px; font-weight: 600;">{{ data.countPending() }}</div>
       </div>
 
@@ -31,7 +31,7 @@
               <line x1="3" y1="10" x2="21" y2="10" />
             </svg>
           </div>
-          <div class="stat-trend-pill" style="background: var(--blue-light); color: var(--blue-brand);">Planned</div>
+          <div class="stat-trend-pill" style="background: var(--blue-light); color: var(--blue-brand);">Pickup</div>
         </div>
         <div class="stat-micro-label"
           style="font-size: 10px; font-weight: 600; color: var(--blue-brand); letter-spacing: 0.05em; margin-bottom: 4px;">
@@ -50,7 +50,7 @@
               <circle cx="18.5" cy="18.5" r="2.5" />
             </svg>
           </div>
-          <div class="stat-trend-pill" style="background: var(--purple-bg); color: var(--purple-brand);">Moving</div>
+          <div class="stat-trend-pill" style="background: var(--purple-bg); color: var(--purple-brand);">Pickup</div>
         </div>
         <div class="stat-micro-label"
           style="font-size: 10px; font-weight: 600; color: var(--purple-brand); letter-spacing: 0.05em; margin-bottom: 4px;">
@@ -67,7 +67,7 @@
               <polyline points="22 4 12 14.01 9 11.01" />
             </svg>
           </div>
-          <div class="stat-trend-pill" style="background: var(--teal-bg); color: var(--teal-brand);">Success</div>
+          <div class="stat-trend-pill" style="background: var(--teal-bg); color: var(--teal-brand);">Pickup</div>
         </div>
         <div class="stat-micro-label"
           style="font-size: 10px; font-weight: 600; color: var(--teal-brand); letter-spacing: 0.05em; margin-bottom: 4px;">
@@ -85,7 +85,7 @@
               <line x1="9" y1="9" x2="15" y2="15" />
             </svg>
           </div>
-          <div class="stat-trend-pill" style="background: #fef2f2; color: #dc2626;">Stopped</div>
+          <div class="stat-trend-pill" style="background: #fef2f2; color: #dc2626;">Pickup</div>
         </div>
         <div class="stat-micro-label"
           style="font-size: 10px; font-weight: 600; color: #dc2626; letter-spacing: 0.05em; margin-bottom: 4px;">
@@ -96,8 +96,6 @@
 
     <div class="header-stack mb-4" style="margin-top: var(--sp-6);">
       <h2 style="font-size: 24px; font-weight: 600; margin: 0 0 12px; color: var(--navy);">Incoming Pickup Requests</h2>
-      <p style="font-size: 14px; color: var(--gray-tertiary); margin: 0 0 0;">From HomeFirst branches — awaiting Kleeto
-        confirmation</p>
     </div>
 
     <!-- Re-introduced Status Banner (Properly Indented) -->
@@ -256,7 +254,7 @@
             <label
               style="display: block; font-size: 14px; font-weight: 600; color: var(--gray-tertiary); margin-bottom: 6px;">Expected
               Pickup Date</label>
-            <input type="date" class="form-control"
+            <input type="date" class="form-control" [min]="getMinDate()"
               style="width: 100%; border: var(--hairline); border-radius: 8px; padding: 8px 10px; font-size: 12px;"
               [ngModel]="confirmDate()" (ngModelChange)="confirmDate.set($event)" />
           </div>

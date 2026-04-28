@@ -36,9 +36,7 @@ export class PickupScheduledPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.ui.setPageTitle(
-      'Pickup Scheduled',
-      'Pickups confirmed and scheduled for collection',
-      ['Operations', 'Pickup Scheduled']
+      'Pickup Scheduled'
     );
     this.fetchData();
   }
@@ -115,9 +113,26 @@ export class PickupScheduledPageComponent implements OnInit {
     this.selectedRequest.set(null);
   }
 
+  getMinDate(): string {
+    const d = this.selectedRequest()?.date;
+    if (!d || d === '—') return '';
+    const parsed = new Date(d);
+    if (isNaN(parsed.getTime())) return '';
+    const yyyy = parsed.getFullYear();
+    const mm = String(parsed.getMonth() + 1).padStart(2, '0');
+    const dd = String(parsed.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  }
+
   submitInTransit(): void {
     if (!this.confirmDate()) {
       this.formError.set(true);
+      return;
+    }
+
+    const minDate = this.getMinDate();
+    if (minDate && this.confirmDate() < minDate) {
+      this.toast.show(`Pickup date cannot be before the scheduled date (${this.selectedRequest()?.date})`, 'error');
       return;
     }
 

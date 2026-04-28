@@ -30,7 +30,7 @@
     </div>
 
     <nav class="sidebar-nav">
-      <div class="nav-section-label">OPERATIONS</div>
+      <div class="nav-section-label">SHIPMENT TRACKER</div>
       <ul class="nav-links">
         <li class="nav-link" routerLink="request-for-pickup" routerLinkActive="active"
           (click)="onNavClick('request-for-pickup')">
@@ -46,7 +46,6 @@
             <polyline points="12 6 12 12 16 14" />
           </svg>
           <span>Pickup Scheduled</span>
-          <span class="dot-indicator teal" *ngIf="counts['pickup-scheduled'] > 0"></span>
         </li>
         <li class="nav-link" routerLink="intransit" routerLinkActive="active" (click)="onNavClick('intransit')">
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
@@ -56,7 +55,6 @@
             <circle cx="18.5" cy="18.5" r="2.5" />
           </svg>
           <span>Intransit</span>
-          <span class="dot-indicator amber" *ngIf="counts['intransit'] > 0"></span>
         </li>
         <li class="nav-link" routerLink="delivered" routerLinkActive="active" (click)="onNavClick('delivered')">
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
@@ -74,11 +72,12 @@
           </svg>
           <span>Cancelled Pickup</span>
         </li>
-        <li class="nav-link"
-            routerLink="vault-management"
-            routerLinkActive="active"
-            *ngIf="isAdminFlag || isManagementFlag || isKleetoFlag"
-            (click)="onNavClick('vault-management')">
+      </ul>
+
+      <div class="nav-section-label">VAULTING</div>
+      <ul class="nav-links">
+        <li class="nav-link" routerLink="vault-management" routerLinkActive="active"
+          *ngIf="isAdminFlag || isManagementFlag || isKleetoFlag" (click)="onNavClick('vault-management')">
 
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="3" y="3" width="18" height="18" rx="2" />
@@ -86,13 +85,23 @@
           </svg>
           <span>Vault Management</span>
         </li>
-        <li class="nav-link" routerLink="user-registration" routerLinkActive="active" *ngIf="isAdminFlag">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/>
-          </svg>
-          <span>Create User</span>
-        </li>
       </ul>
+
+      <ng-container *ngIf="isAdminFlag">
+        <div class="nav-section-label">USER CREATION</div>
+        <ul class="nav-links">
+          <li class="nav-link" routerLink="user-registration" routerLinkActive="active"
+            (click)="onNavClick('user-registration')">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="8.5" cy="7" r="4" />
+              <line x1="20" y1="8" x2="20" y2="14" />
+              <line x1="23" y1="11" x2="17" y2="11" />
+            </svg>
+            <span>Create User</span>
+          </li>
+        </ul>
+      </ng-container>
     </nav>
 
     <footer class="sidebar-footer">

@@ -225,11 +225,15 @@ export class VaultManagementPageComponent implements OnInit, OnDestroy {
     }
   }
 
+  isVaulted(doc: VaultDocument): boolean {
+    return !!doc.vaultingDate && doc.vaultingDate !== '—';
+  }
+
   toggleAllDocsSelection(event: any): void {
     const isChecked = event.target.checked;
     if (isChecked) {
       this.documents.forEach(doc => {
-        if (!doc.vaultingDate) {
+        if (!this.isVaulted(doc)) {
           this.selectedDocsForVaulting.add(doc.id);
         }
       });
@@ -239,7 +243,7 @@ export class VaultManagementPageComponent implements OnInit, OnDestroy {
   }
 
   isAllDocsSelected(): boolean {
-    const availableDocs = this.documents.filter(doc => !doc.vaultingDate);
+    const availableDocs = this.documents.filter(doc => !this.isVaulted(doc));
     return availableDocs.length > 0 && this.selectedDocsForVaulting.size === availableDocs.length;
   }
 

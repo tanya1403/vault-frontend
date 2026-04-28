@@ -61,9 +61,7 @@ export class RequestForPickupPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.ui.setPageTitle(
-      'Request for Pickup',
-      'Incoming pickup requests from HomeFirst — confirm to schedule',
-      ['Operations', 'Request for Pickup']
+      'Request for Pickup'
     );
     
     // Skip redundant fetch if Dashboard already populated the signal
@@ -164,11 +162,29 @@ export class RequestForPickupPageComponent implements OnInit {
     this.showModal.set(false);
   }
 
+  getMinDate(): string {
+    const d = this.selectedRequest()?.date;
+    if (!d || d === '—') return '';
+    const parsed = new Date(d);
+    if (isNaN(parsed.getTime())) return '';
+    const yyyy = parsed.getFullYear();
+    const mm = String(parsed.getMonth() + 1).padStart(2, '0');
+    const dd = String(parsed.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  }
+
   submitConfirm(): void {
     if (!this.confirmDate() || !this.confirmPOD().trim() || !this.selectedFile()) {
       this.formError.set(true);
       return;
     }
+
+    const minDate = this.getMinDate();
+    if (minDate && this.confirmDate() < minDate) {
+      this.toast.show(`Scheduled date cannot be earlier than requested date (${this.selectedRequest()?.date})`, 'error');
+      return;
+    }
+
     const r = this.selectedRequest()!;
     this.confirmLoading.set(true);
     

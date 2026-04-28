@@ -30,9 +30,7 @@ export class IntransitPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.ui.setPageTitle(
-      'Intransit',
-      'Shipments currently in transit to the vault',
-      ['Operations', 'Intransit']
+      'Intransit'
     );
     this.fetchData();
   }
